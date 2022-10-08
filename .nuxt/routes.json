@@ -1,0 +1,121 @@
+[
+  {
+    "name": "acceptable-use-policy",
+    "path": "/acceptable-use-policy",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/acceptable-use-policy/index.vue",
+    "chunkName": "pages/acceptable-use-policy/index",
+    "_name": "_8491dd6a"
+  },
+  {
+    "name": "appsumo",
+    "path": "/appsumo",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/appsumo/index.vue",
+    "chunkName": "pages/appsumo/index",
+    "_name": "_4341462d"
+  },
+  {
+    "name": "booked",
+    "path": "/booked",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/booked/index.vue",
+    "chunkName": "pages/booked/index",
+    "_name": "_8e39aed4"
+  },
+  {
+    "name": "contact-us",
+    "path": "/contact-us",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/contact-us/index.vue",
+    "chunkName": "pages/contact-us/index",
+    "_name": "_880b950e"
+  },
+  {
+    "name": "cookie-policy",
+    "path": "/cookie-policy",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/cookie-policy/index.vue",
+    "chunkName": "pages/cookie-policy/index",
+    "_name": "_5e5b6c83"
+  },
+  {
+    "name": "customer-support",
+    "path": "/customer-support",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/customer-support/index.vue",
+    "chunkName": "pages/customer-support/index",
+    "_name": "_8028cb24"
+  },
+  {
+    "name": "easy",
+    "path": "/easy",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/easy/index.vue",
+    "chunkName": "pages/easy/index",
+    "_name": "_69edab90"
+  },
+  {
+    "name": "hosting-guide",
+    "path": "/hosting-guide",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/hosting-guide/index.vue",
+    "chunkName": "pages/hosting-guide/index",
+    "_name": "_52c72a1e"
+  },
+  {
+    "name": "hosting-upgrade",
+    "path": "/hosting-upgrade",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/hosting-upgrade/index.vue",
+    "chunkName": "pages/hosting-upgrade/index",
+    "_name": "_7d38d391"
+  },
+  {
+    "name": "next-steps",
+    "path": "/next-steps",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/next-steps/index.vue",
+    "chunkName": "pages/next-steps/index",
+    "_name": "_2740335b"
+  },
+  {
+    "name": "privacy-policy",
+    "path": "/privacy-policy",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/privacy-policy/index.vue",
+    "chunkName": "pages/privacy-policy/index",
+    "_name": "_248a7eb6"
+  },
+  {
+    "name": "success",
+    "path": "/success",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/success/index.vue",
+    "chunkName": "pages/success/index",
+    "_name": "_42977b8b"
+  },
+  {
+    "name": "terms-and-conditions",
+    "path": "/terms-and-conditions",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/terms-and-conditions/index.vue",
+    "chunkName": "pages/terms-and-conditions/index",
+    "_name": "_04060c82"
+  },
+  {
+    "name": "terms-of-service",
+    "path": "/terms-of-service",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/terms-of-service/index.vue",
+    "chunkName": "pages/terms-of-service/index",
+    "_name": "_17124413"
+  },
+  {
+    "name": "thank-you",
+    "path": "/thank-you",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/thank-you/index.vue",
+    "chunkName": "pages/thank-you/index",
+    "_name": "_5d94bbc4"
+  },
+  {
+    "name": "training",
+    "path": "/training",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/training/index.vue",
+    "chunkName": "pages/training/index",
+    "_name": "_74c91e30"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Volumes/geek/Projects/ProjectsDoing/JEFF/jeff new/zia/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_0309db97"
+  }
+]
