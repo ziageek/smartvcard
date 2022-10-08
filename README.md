@@ -1,6 +1,8 @@
-<p align="center"><a href="https://smartvcard.com"><img src="assets/images/GitHub.png" width="100%"></a></p>
+<p align="center"><a href="https://smartvcard.com">
+<!-- <img src="assets/images/GitHub.png" width="100%"></a> -->
+</p>
 
-<h1 align="center">Smart cVCARD</h1>
+<h1 align="center">Smart vCARD</h1>
 <!-- <h3 align="center">Your Website Can Host Your Digital Business Cards for FREE!</h3> -->
 <p align="center">SMART vCARD helps you create interactive and responsive HTML-based digital business cards that can be hosted with your website.</p>
 <h3 align="center"><a href="https://www.smartvcard.com">Open App</a> | <a href="https://www.smartvcard.com">View demo</a></h3>
@@ -37,8 +39,8 @@
 
 You can,
 
-- [Create an issue here](https://github.com/vishnuraghavb/SMARTvCARD/issues)
-- [Contact Support](wa.me/+923004243764) (quicker replies and best for discussion)
+- [Create an issue here](https://github.com/ziageek/smartvcard/issues)
+- [Contact Support](https://wa.me/+923004243764) (quicker replies and best for discussion)
 - Contact me at ziaullah623@gmail.com
 
 ## License
