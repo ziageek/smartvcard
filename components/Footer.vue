@@ -182,6 +182,16 @@
           >Acceptable Use Policy</a
         >
       </p>
+      <p class="mt-1 mb-8 text-center text-xs text-gray-400">
+        <a
+          class="underline text-emerald-600 font-extrabold hover:text-emerald-500 focus:text-emerald-500 transition-colors duration-200"
+          href="https://github.com/ziageek/smartvcard"
+          target="_blank"
+          rel="noopener noreferrer"
+          >View&nbsp;Source</a
+        >
+        | AGPLv3 License
+      </p>
     </div>
   </footer>
 </template>
@@ -190,7 +200,7 @@
 export default {}
 </script>
 
-<style >
+<style>
 .ftr {
   width: 200px;
   height: 110px;
@@ -201,4 +211,3 @@ export default {}
   bottom: 0;
 } */
 </style>
-
