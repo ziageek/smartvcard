@@ -63,4 +63,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Support me by buying me a coffee :)
 
-<a href="https://www.buymeacoffee.com/ziageek"><img alt="Donate to Zia" src="assets/images/donate.svg" width="207"></a>
+<a href="https://www.buymeacoffee.com/ziageek"><img alt="Donate to Zia" src="assets/images/donate.png" width="207"></a>
