@@ -1747,6 +1747,7 @@ export default {
     simplifyCard: {
       async handler(newValue, oldValue) {
         if (newValue === true) {
+          this.simplifyCard = false
           Swal.fire({
             title: 'Error!',
             text: `Use Your Thrive Cart Here`,
@@ -1762,6 +1763,7 @@ export default {
         // Zia new work
         // console.log(newValue)
         if (newValue === true) {
+          this.footerCreditCustom = false
           Swal.fire({
             title: 'Error!',
             text: `Use Your Thrive Cart Here`,
@@ -1775,6 +1777,7 @@ export default {
     seoOptimization: {
       async handler(newValue, oldValue) {
         if (newValue === true) {
+          this.seoOptimization = false
           Swal.fire({
             title: 'Error!',
             text: `Use Your Thrive Cart Here`,
