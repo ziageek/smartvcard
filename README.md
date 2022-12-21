@@ -40,8 +40,7 @@
 You can,
 
 - [Create an issue here](https://github.com/ziageek/smartvcard/issues)
-- [Contact Support](https://wa.me/+923004243764) (quicker replies and best for discussion)
-- Contact me at ziaullah623@gmail.com
+- Contact me at ziageekbiz@gmail.com
 
 ## License
 
