@@ -41,7 +41,7 @@
           Self-Hosting Guide
         </a>
         |
-        <a
+        <!-- <a
           href="/hosting-upgrade/"
           class="
             underline
@@ -57,7 +57,7 @@
         >
           Host with Us
         </a>
-        |
+        | -->
         <a
           href="/training"
           class="
@@ -104,7 +104,7 @@
         Generator
       </p> -->
       <p style="color: rgb(255, 255, 255)">
-        Copyright © 2022
+        Copyright © 2024
         <a
           href="https://getbizviz.com/"
           target="_blank"

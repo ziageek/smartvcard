@@ -4,6 +4,16 @@
       class="h-30 bg-gray-900 mx-auto text-gray-100"
       style="max-width: 960px"
     >
+    <!-- Start Engagement Widget Script -->
+<script async
+  crossorigin
+  type="module"
+  id="engagementWidget"
+  src="https://cdn.chatwidgets.net/widget/livechat/bundle.js"
+  data-env="portal-api"
+  data-instance="Y-MQIeB8OVhrEg-V"
+  data-container="#engagement-widget-container"></script>
+<!-- End Engagement Widget Script -->
       <div class="px-4">
         <div class="flex items-start justify-between pt-8">
           <NuxtLink to="/">

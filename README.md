@@ -46,7 +46,13 @@ You can,
 
 ```
 SMART vCARD - Another Software Solution By BizViz
-Copyright (C) 2022 ZiaGeek
+Copyright (C) 2024 ZiaGeek
+
+
+We also give credit for this project to Vishnu Raghav (https://github.com/vishnuraghavb)
+
+Please note:-  Hosted Features are stand alone project. That was never derived or ispired by this project. We developed that our own to host different kind of stuff.
+
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published

@@ -20,6 +20,6 @@ If I make any material changes to this privacy policy, I will notify you by plac
 
 ## Contact Information
 
-For any questions, suggestions or concerns regarding my privacy policy, please send me an email to ziaullah623@gmail.com.
+For any questions, suggestions or concerns regarding my privacy policy, please send me an email to apps@vishnuraghav.com.
 
 Last Updated: 10 February 2021

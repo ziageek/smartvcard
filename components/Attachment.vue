@@ -1,3 +1,4 @@
+
 <template>
   <div class="flex mt-6">
     <transition name="list">
@@ -7,6 +8,7 @@
         @closeCropper="closeCropper"
         :content="content"
         :mime="mime"
+        :type="filetype"
         :resizeImage="resizeImage"
       />
     </transition>
@@ -15,7 +17,13 @@
         class="w-12 h-12 rounded object-contain"
         v-if="imageAttached"
         :src="content[type].url"
-        :title="`${type == 'logo' ? 'Brand logo' : 'Card holder\'s photo'}`"
+        :title="`${
+          type == 'logo'
+            ? 'Brand logo'
+            : type == 'photo'
+            ? 'Card holder\'s photo'
+            : 'Cover image'
+        }`"
       />
       <button
         v-if="!imageAttached"
@@ -32,7 +40,9 @@
         <input
           :ref="`import${type}`"
           type="file"
-          :accept="`.png,.jpg,.jpeg,.gif,.webp${type == 'logo' ? ',.svg' : ''}`"
+          :accept="`.png,.jpg,.jpeg,.gif,.webp${
+            type == 'logo' || type == 'cover' ? ',.svg' : ''
+          }`"
           v-show="false"
           @change="fileLoaded($event, type, false)"
           @click="$event.target.files = null"
@@ -48,7 +58,7 @@
       </p>
       <button
         v-else
-        class="p-1 m-2 flex-shrink-0 focus:outline-none rounded hover:bg-gray-700 focus:bg-gray-700 transition-colors duration-200"
+        class="p-1 m-2 shrink-0 focus:outline-none rounded hover:bg-gray-700 focus:bg-gray-700 transition-colors duration-200"
         @click="content[type].url = null"
         :aria-label="`Remove ${type}`"
         :title="`Remove ${type}`"
@@ -63,6 +73,10 @@
 </template>
 
 <script>
+
+import Cropper from '@/components/Cropper'
+
+
 export default {
   props: [
     'content',
@@ -70,20 +84,24 @@ export default {
     'label',
     'description',
     'resizeImage',
-    'showAlert'
+    'showAlert',
   ],
+
+  components: {   Cropper
+  },
   data() {
     return {
       dragOver: false,
       showCropper: false,
       tempURL: null,
-      mime: null
+      mime: null,
+      filetype: null,
     }
   },
   computed: {
     imageAttached() {
       return this.content[this.type].url ? true : false
-    }
+    },
   },
   methods: {
     closeCropper() {
@@ -102,14 +120,14 @@ export default {
         let file = dropped ? e.dataTransfer.files[0] : e.target.files[0]
         let mime = file.type
         if (
-          type == 'logo' &&
+          (type == 'logo' || type == 'cover') &&
           file.type.match(/image\/(svg\+xml|png|jpeg|gif|webp)/)
         ) {
           this.imageLoaded(file, type, mime)
         } else if (file.type.match(/image\/(png|jpeg|gif|webp)/)) {
           this.imageLoaded(file, type, mime)
         } else {
-          if (type == 'logo') {
+          if (type == 'logo' || type == 'cover') {
             this.showAlert(
               'Unsupported file format.\nOnly jpeg, png, webp, gif and svg file can be attached.'
             )
@@ -122,34 +140,37 @@ export default {
       }
     },
     imageLoaded(file, type, mime) {
+      console.log(type, mime)
       let reader = new FileReader()
-      reader.onload = f => {
+      reader.onload = (f) => {
         let dataURI = f.target.result
         let ext = dataURI
           .split(',')[0]
           .split(':')[1]
           .split('/')[1]
           .match(/^\w+/g)[0]
-
-        if (type == 'logo' || type == 'icon' || mime.match(/gif|webp/)) {
+        if (type == 'logo' || mime.match(/svg|gif|webp/)) {
           this.content[type] = {
             url: dataURI,
             blob: file,
             ext,
             mime,
-            resized: file
+            resized: file,
           }
-
           if (!mime.match(/svg|gif|webp/)) this.resizeImage(type, mime)
         } else {
-          this.content.photo.ext = ext
+          this.content[type].ext = ext
+          this.filetype = type
           this.mime = mime
           this.tempURL = dataURI
           this.showCropper = true
         }
       }
       reader.readAsDataURL(file)
-    }
-  }
+    },
+  },
 }
 </script>
+
+
+

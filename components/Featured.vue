@@ -147,6 +147,17 @@
             :resizeImage="resizeImage"
             :showAlert="showAlert"
           />
+
+          <CustomButton
+            v-else-if="item.contentType == 'customButton'"
+            :featured="featured"
+            :item="item"
+            :index="index"
+            :i="i"
+            :resizeImage="resizeImage"
+            :showAlert="showAlert"
+          />
+
           <div
             class="flex items-center mt-2"
             v-else-if="item.contentType == 'text'"
@@ -218,7 +229,39 @@
                 v-html="require(`~/assets/icons/drag.svg?include`)"
               ></div>
             </button>
-            <div class="w-full">
+            <div
+              class="w-full"
+              v-if="featured[index].content[i].contentType == 'link'"
+            >
+              <textarea
+                class="
+                  px-4
+                  w-full
+                  h-12
+                  bg-black
+                  placeholder-gray-600
+                  rounded
+                  border border-transparent
+                  transition-colors
+                  duration-200
+                  focus:outline-none
+                  focus:border-gray-500
+                  hover:border-gray-500
+                "
+                ref="link"
+                type="text"
+                aria-label="Paste  JavaScript code here"
+                title="Paste  JavaScript code here"
+                v-model="featured[index].content[i].value"
+                placeholder="Paste  JavaScript code here"
+                rows="5"
+              />
+            </div>
+
+            <div
+              class="w-full"
+              v-if="featured[index].content[i].contentType == 'iframe'"
+            >
               <input
                 class="
                   px-4
@@ -238,10 +281,11 @@
                 type="text"
                 aria-label="Paste HTML embed code here"
                 title="Paste HTML embed code here"
-                v-model="featured[index].content[i]"
                 placeholder="Paste HTML embed code here"
+                v-model="featured[index].content[i].value"
               />
             </div>
+
             <button
               class="
                 p-1
@@ -348,14 +392,64 @@
           duration-200
           focus:outline-none
         "
-        @click="addLink()"
+        @click="addProduct()"
+        aria-label="Add product"
+      >
+        <div
+          class="w-6 h-6 mr-2 sm:mr-0"
+          v-html="require(`~/assets/icons/box.svg?include`)"
+        ></div>
+        <p class="sm:mt-2 leading-none">Add product</p>
+      </button>
+
+      <button
+        class="
+          flex
+          sm:flex-col
+          items-center
+          p-3
+          rounded
+          cursor-pointer
+          bg-gray-700
+          hover:bg-gray-600
+          focus:bg-gray-600
+          transition-colors
+          duration-200
+          focus:outline-none
+        "
+        @click="customButton()"
+        aria-label="Add Button"
+      >
+        <div
+          class="w-6 h-6 mr-2 sm:mr-0"
+          v-html="require(`~/assets/icons/box.svg?include`)"
+        ></div>
+        <p class="sm:mt-2 leading-none">Custom Button</p>
+      </button>
+
+      <button
+        class="
+          flex
+          sm:flex-col
+          items-center
+          p-3
+          rounded
+          cursor-pointer
+          bg-gray-700
+          hover:bg-gray-600
+          focus:bg-gray-600
+          transition-colors
+          duration-200
+          focus:outline-none
+        "
+        @click="addLinkIFrame()"
         aria-label="embed code"
       >
         <div
           class="w-6 h-6 mr-2 sm:mr-0"
-          v-html="require(`~/assets/icons/code.svg?include`)"
+          v-html="require(`~/assets/icons/videos.svg?include`)"
         ></div>
-        <p class="sm:mt-2 leading-none">embed code</p>
+        <p class="sm:mt-2 leading-none">iframe code</p>
       </button>
       <button
         class="
@@ -372,14 +466,14 @@
           duration-200
           focus:outline-none
         "
-        @click="addProduct()"
-        aria-label="Add product"
+        @click="addLink()"
+        aria-label="embed code"
       >
         <div
           class="w-6 h-6 mr-2 sm:mr-0"
-          v-html="require(`~/assets/icons/box.svg?include`)"
+          v-html="require(`~/assets/icons/code.svg?include`)"
         ></div>
-        <p class="sm:mt-2 leading-none">Add product</p>
+        <p class="sm:mt-2 leading-none">Embed code</p>
       </button>
     </div>
   </div>
@@ -396,6 +490,7 @@ pdfjs.workerSrc = false
 import draggable from 'vuedraggable'
 
 import ProductCard from './ProductCard'
+import CustomButton from './CustomButton.vue'
 
 export default {
   props: [
@@ -406,22 +501,23 @@ export default {
     'resizeImage',
     'showAlert'
   ],
-  data () {
+  data() {
     return {
       dragOver: false
     }
   },
   components: {
     ProductCard,
-    draggable
+    draggable,
+    CustomButton
   },
   computed: {
-    hasContent () {
+    hasContent() {
       return this.featured[this.index].content.length
     }
   },
   methods: {
-    mediaType (t) {
+    mediaType(t) {
       switch (true) {
         case t == 'image/jpeg' || t == 'image/png':
           return 'image'
@@ -433,15 +529,39 @@ export default {
           return 'document'
       }
     },
-    attachMedia () {
+    attachMedia() {
       this.$refs.import.click()
     },
-    addLink () {
-      this.featured[this.index].content.push('')
-      let links = this.featured[this.index].content.filter(e => !e.contentType)
+    addLink() {
+      // this.featured[this.index].content.push('')
+      // let links = this.featured[this.index].content.filter(e => !e.contentType)
+      // setTimeout(() => this.$refs.link[links.length - 1].focus(), 50)
+
+      this.featured[this.index].content.push({
+        contentType: 'link',
+        value: null
+      })
+      let texts = this.featured[this.index].content.filter(
+        e => e.contentType == 'link'
+      )
+      setTimeout(() => this.$refs.text[texts.length - 1].focus(), 50)
+    },
+
+    addLinkIFrame() {
+      // this.featured[this.index].content.push('')
+
+      this.featured[this.index].content.push({
+        contentType: 'iframe',
+        value: null
+      })
+
+      let links = this.featured[this.index].content.filter(
+        e => e.contentType == 'link'
+      )
       setTimeout(() => this.$refs.link[links.length - 1].focus(), 50)
     },
-    addProduct () {
+
+    addProduct() {
       this.featured[this.index].content.push({
         image: null,
         title: null,
@@ -452,7 +572,17 @@ export default {
         contentType: 'product'
       })
     },
-    addText () {
+
+    customButton() {
+      this.featured[this.index].content.push({
+        label: null,
+        link: null,
+        contentType: 'customButton'
+      })
+    },
+
+    //  <div v-html="item.value"></div>
+    addText() {
       this.featured[this.index].content.push({
         contentType: 'text',
         value: null
@@ -460,9 +590,10 @@ export default {
       let texts = this.featured[this.index].content.filter(
         e => e.contentType == 'text'
       )
+      console.log('texts', texts)
       setTimeout(() => this.$refs.text[texts.length - 1].focus(), 50)
     },
-    fileLoaded (e, dropped) {
+    fileLoaded(e, dropped) {
       if (
         (dropped && e.dataTransfer.files.length) ||
         (!dropped && e.target.files.length)
@@ -494,14 +625,14 @@ export default {
         }
       } else this.dragOver = false
     },
-    getFileName (file) {
+    getFileName(file) {
       return file.name.replace(/(?:\.([^.]+))?$/, '')
     },
-    removeItem (i) {
+    removeItem(i) {
       this.featured[this.index].content.splice(i, 1)
     },
     // Images
-    imageLoaded (file, type, mime) {
+    imageLoaded(file, type, mime) {
       let title = this.getFileName(file)
       let reader = new FileReader()
       reader.onload = f => {
@@ -532,7 +663,7 @@ export default {
     },
 
     // Music
-    musicLoaded (file, type) {
+    musicLoaded(file, type) {
       this.extractTags(file, type)
         .then(f => {
           this.resizeImage(
@@ -544,7 +675,7 @@ export default {
         })
         .catch(err => {})
     },
-    async extractTags (file, type) {
+    async extractTags(file, type) {
       return new Promise((resolve, reject) => {
         convertFileToBuffer(file)
           .then(parse)
@@ -610,7 +741,7 @@ export default {
     },
 
     // Videos
-    videoLoaded (file, type) {
+    videoLoaded(file, type) {
       let title = this.getFileName(file)
       let canvas = document.createElement('canvas')
       let ctx = canvas.getContext('2d')
@@ -621,7 +752,7 @@ export default {
       let reader = new FileReader()
       let uA = navigator.userAgent.match(/firefox|android/gi)
       let vm = this
-      function videoProcessor () {
+      function videoProcessor() {
         let width = video.videoWidth
         let height = video.videoHeight
 
@@ -664,7 +795,7 @@ export default {
     },
 
     // PDFs
-    dataURIToBinary (dataURI) {
+    dataURIToBinary(dataURI) {
       var BASE64_MARKER = ';base64,'
       var base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length
       var base64 = dataURI.substring(base64Index)
@@ -677,7 +808,7 @@ export default {
       }
       return array
     },
-    formatBytes (a, b = 2) {
+    formatBytes(a, b = 2) {
       if (0 === a) return '0 Bytes'
       const c = 0 > b ? 0 : b,
         d = Math.floor(Math.log(a) / Math.log(1024))
@@ -687,7 +818,7 @@ export default {
         ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'][d]
       )
     },
-    documentLoaded (file, type) {
+    documentLoaded(file, type) {
       let filesize = this.formatBytes(file.size)
       let title = this.getFileName(file)
       let reader = new FileReader()

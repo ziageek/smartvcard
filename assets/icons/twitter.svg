@@ -1,4 +1,12 @@
-<svg viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2">
-  <path d="M19.981 8.497c.013.175.013.349.013.523 0 5.325-4.053 11.461-11.46 11.461-2.282 0-4.402-.661-6.186-1.809.324.037.636.05.973.05a8.07 8.07 0 005.001-1.721 4.036 4.036 0 01-3.767-2.793c.249.037.499.062.761.062.361 0 .724-.05 1.061-.137a4.027 4.027 0 01-3.23-3.953v-.05c.537.299 1.16.486 1.82.511a4.022 4.022 0 01-1.796-3.354c0-.748.199-1.434.548-2.032a11.457 11.457 0 008.306 4.215c-.062-.3-.1-.611-.1-.923a4.026 4.026 0 014.028-4.028c1.16 0 2.207.486 2.943 1.272a7.957 7.957 0 002.556-.973 4.02 4.02 0 01-1.771 2.22A8.073 8.073 0 0022 6.414a8.645 8.645 0 01-2.019 2.083z" fill="#fff" fill-rule="nonzero"/>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.5.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 300 300" style="enable-background:new 0 0 300 300;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+</style>
+<g id="layer1" transform="translate(52.390088,-25.058597)">
+	<path id="path1009" class="st0" d="M-49.9,36.3L64.6,189.4L-50.6,313.8h25.9L76.1,204.9l81.5,108.9h88.2L124.9,152.1L232.2,36.3
+		h-25.9l-92.9,100.3l-75-100.3C38.4,36.3-49.9,36.3-49.9,36.3z M-11.8,55.4h40.5l179,239.3h-40.5L-11.8,55.4z"/>
+</g>
 </svg>

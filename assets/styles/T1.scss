@@ -76,6 +76,7 @@ header {
   position: relative;
   padding: 6rem 3rem;
   box-sizing: border-box;
+  padding-bottom: 0;
 }
 #logo {
   max-height: 6rem;
@@ -124,6 +125,8 @@ main {
       pointer-events: none;
       user-select: none;
       margin-top: -6rem;
+      // z-index:99999;
+      
   }
 }
 #info {
@@ -206,6 +209,7 @@ a {
   pointer-events: none;
   user-select: none;
   margin-top: -6rem;
+  z-index: 9999;
    width: 10rem;
       height: 10rem;
       border-radius: 100%;
@@ -213,6 +217,7 @@ a {
       pointer-events: none;
       user-select: none;
       margin-top: -6rem;
+      // z-index:99999;
 }
 
 #vcard {
@@ -259,6 +264,7 @@ a {
   padding-top: 56.25%;
   iframe {
     position: absolute;
+    padding-bottom: 2%;
     top: 0;
     left: 0;
     width: 100%;
@@ -370,4 +376,45 @@ footer {
   font-size: 0.8rem;
   opacity: 0.6;
   margin-top: 0px !important;
+}
+
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2rem 3rem;
+  padding: 4rem 0rem;
+  box-sizing: border-box;
+  padding-bottom: 0
+
+}
+
+
+ .headerImgC {
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  height: 100%;
+  overflow: hidden;
+}
+#cover {
+  position: relative;
+  z-index: -1;
+  grid-column: 1;
+  grid-row: 1;
+  width: 100%;
+  height: 20rem;
+  object-position: top center;
+  object-fit: cover;
+}
+#logo {
+  max-height: 6rem;
+  pointer-events: none;
+  user-select: none;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
 }

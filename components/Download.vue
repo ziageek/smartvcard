@@ -66,8 +66,8 @@
         <br /><br />
         <span><strong>DONE FOR YOU</strong></span><br/>
         Optionally host your vCard Zip folder on our
-        <NuxtLink
-          to="/hosting-upgrade/"
+         <a
+          href="https://www.ziphost.app/"
           class="
             cursor-pointer
             underline
@@ -78,7 +78,8 @@
             transition-colors
             duration-200
           "
-          >domain</NuxtLink
+          target="_blank"
+          >domain</a
         >
         (i.e vcard.fyi/yourname)
       </p>

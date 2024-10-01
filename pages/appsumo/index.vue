@@ -243,7 +243,7 @@ import swal from 'sweetalert2'
 window.Swal = swal
 import Footer from '@/components/Footer'
 import Header from '@/components/Header'
-
+import { redeemTheCode } from './../../utils/api.js'
 export default {
   components: { Header, Footer },
   head: {
@@ -274,14 +274,60 @@ export default {
       )
     },
     async redeemCode() {
-      Swal.fire({
-        title: 'Error!',
-        text:
-          `Write your Custom Code, Since it is confidencial` ||
-          'Something bad happened, try again later',
-        icon: 'error',
-        confirmButtonText: 'Ok'
-      })
+      try {
+        if (!this.agreed) {
+          return
+        }
+        if (
+          this.first_name === null ||
+          this.last_name === null ||
+          this.email === null ||
+          this.code === null
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text:
+              `All Fields Are Mandatory!!!` ||
+              'Something bad happened, try again later',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+          return
+        }
+        if (!this.isEmail(this.email)) {
+          Swal.fire({
+            title: 'Error!',
+            text:
+              `Email Format Is Incorrect` ||
+              'Something bad happened, try again later',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+          return
+        }
+        let response = await redeemTheCode(
+          this.first_name,
+          this.last_name,
+          this.email,
+          this.code
+        )
+        if (response.status !== 200) {
+          Swal.fire({
+            title: 'Error!',
+            text:
+              `${response?.data.message}` ||
+              'Something bad happened, try again later',
+            icon: 'error',
+            confirmButtonText: 'Ok'
+          })
+        } else {
+          window.location.replace('/thank-you')
+          return
+        }
+      } catch (error) {
+        console.log(error)
+        return
+      }
     }
   }
 }

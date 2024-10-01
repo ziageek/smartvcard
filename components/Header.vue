@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import { checkLicense, logOut } from './../utils/api.js'
 import swal from 'sweetalert2'
 window.Swal = swal
 export default {
@@ -51,12 +52,116 @@ export default {
   },
   methods: {
     async loginOrBuy() {
-      //Your method here
-      this.isLoggedIn = false
+      if (localStorage.getItem('license_key') !== null) {
+        let key = localStorage.getItem('license_key')
+        let myresponse = await logOut(key)
+        if (myresponse.status === 200) {
+          localStorage.removeItem('license_key')
+          this.isLoggedIn = false
+          window.location.reload()
+        }
+      } else {
+        if (this.licenseKey === '' || this.licenseKey === null) {
+          const elem = this.$refs.myPurchaseBtn
+          elem.click()
+        } else {
+          let response = await checkLicense(this.licenseKey, 'login')
+          // console.log('My response', response?.data.message)
+          if (response.status !== 200) {
+            this.licenseKey = ''
+            // alert(
+            //   `ERROR CODE:- ${response.status} REASON: ${response.data.message}`
+            // )
+            Swal.fire({
+              title: 'Error!',
+              html:
+                `${response?.data.message}` ||
+                'Something bad happened, try again later',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            })
+            if (response.status === 404) {
+              setTimeout(() => {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }, 2000)
+            }
+            if (response.status === 400) {
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              // alert('BYE BYE TA TA')
+              return
+            }
+          } else if (response.status === 200) {
+            localStorage.setItem('license_key', response.data.license_key)
+            this.licenseKey = ''
+            this.isLoggedIn = true
+            Swal.fire({
+              title: 'Congratulations!',
+              text: 'You have successfully activated your Agency License!',
+              icon: 'success',
+              confirmButtonText: 'Ok'
+            })
+            return
+            // console.log('RESPONSE SHAREEEF', response)
+          }
+          //check the key, if true, login, else fail.
+          // this.isLoggedIn = true
+          // console.log(this.isLoggedIn)
+          return
+          const elem = this.$refs.myPurchaseBtn
+          elem.click()
+        }
+      }
     }
   },
   async mounted() {
-    this.isLoggedIn = false
+    let isPresent = localStorage.getItem('license_key')
+    if (isPresent !== null) {
+      let licenseKey = localStorage.getItem('license_key')
+      let response = await checkLicense(licenseKey, 'ignore')
+      // console.log('My response', response)
+      if (response.status !== 200) {
+        this.isLoading = false
+        localStorage.removeItem('license_key')
+        // alert(
+        //   `ERROR CODE:- ${response.status} REASON: `
+        // )
+        Swal.fire({
+          title: 'Error!',
+          html:
+            `${response?.data.message}` ||
+            'Something bad happened, try again later',
+          icon: 'error',
+          confirmButtonText: 'Ok'
+        })
+        if (response.status === 404) {
+          const elem = this.$refs.myPurchaseBtn
+          elem.click()
+        }
+        if (response.status === 400) {
+          localStorage.removeItem('license_key')
+        }
+      } else if (response.status === 200) {
+        this.isLoading = false
+        this.isLoggedIn = true
+        return
+        // console.log('RESPONSE SHAREEEF', response)
+      }
+      this.isLoading = false
+    } else {
+      this.isLoading = false
+    }
+    // setTimeout(() => {
+    //   this.isLoggedIn = true
+    // }, 2000)
+    // console.log(`the component is now mounted.`)
   }
 }
 </script>

@@ -4,6 +4,21 @@
     class="container relative bg-gray-900 mx-auto text-gray-100"
     style="max-width: 960px"
   >
+    <!-- Start Engagement Widget Script -->
+    <!-- Start Engagement Widget Script -->
+    <script
+      async
+      crossorigin
+      type="module"
+      id="engagementWidget"
+      src="XXXXXXXXXXXXXXXXXX"
+      data-env="portal-api"
+      data-instance="XXXXXXXXXXXXXXXXXX"
+      data-container="#engagement-widget-container"
+    ></script>
+    <!-- End Engagement Widget Script -->
+    <!-- End Engagement Widget Script -->
+    <!-- MODEL WAS REPLACED HERE -->
     <div
       v-if="content"
       id="notificationContainer"
@@ -55,6 +70,7 @@
         :downloadVcard="downloadVcard"
         :footerCredit="footerCredit"
         :simplifyCard="simplifyCard"
+        :isFeaturedOn="isFeaturedOn"
         :showAlert="showAlert"
         :hasLightBG="hasLightBG"
         :downloadKey="downloadKey"
@@ -115,32 +131,120 @@
     <div class="md:grid md:grid-cols-2">
       <div class="px-4 mt-32">
         <div ref="create" id="step-1" class="pt-8">
-          <h2 class="font-extrabold text-2xl">Image attachments</h2>
-          <div class="stepC">
-            <Attachment
-              :content="images"
-              type="logo"
-              :resizeImage="resizeImage"
-              label="Upload your brand logo"
-              description="suggested format: svg, png or gif"
-              :showAlert="showAlert"
-            />
-            <Attachment
-              :content="images"
-              type="photo"
-              :resizeImage="resizeImage"
-              label="Upload your headshot"
-              description="suggested format: jpeg, png or gif"
-              :showAlert="showAlert"
-            />
-            <p class="mt-6 border p-4 rounded border-gray-700 text-gray-400">
-              Recommended brand logo size is 350 x 100 pixels. Recommended
-              headshot is 300 x 300 pixels.
-            </p>
+          <div id="step-6" class="mt-16">
+            <h2 class="font-extrabold text-2xl">
+              Header Image
+            </h2>
+
+            <div class="stepC mt-6">
+              <p class=" ">Select between a logo or cover photo</p>
+              <br />
+              <div class="flex items-center">
+                <div
+                  class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
+                  :class="{
+                    'bg-green-600 hover:bg-green-500 focus:bg-green-500': logoOrHeader
+                  }"
+                  tabindex="0"
+                  @click="logoOrHeader = !logoOrHeader"
+                >
+                  <!-- <transition name="slide"> -->
+                  <input
+                    type="checkbox"
+                    :value="logoOrHeader"
+                    id="logoOrHeader"
+                    v-model="logoOrHeader"
+                    class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
+                  />
+                </div>
+                <p>
+                  {{ logoOrHeader ? 'Cover Photo' : 'Brand Logo' }}
+                </p>
+
+                <br />
+              </div>
+
+              <div
+                :style="{
+                  display: logoOrHeader ? 'flex' : 'none',
+                  flexDirection: 'column'
+                }"
+              >
+                <div class="stepC">
+                  <Attachment
+                    :content="images"
+                    type="cover"
+                    :resizeImage="resizeImage"
+                    label="Add cover photo"
+                    description="suggested format: svg, jpeg, png or gif"
+                    :showAlert="showAlert"
+                  />
+
+                  <p
+                    class="mt-6 border p-4 rounded border-gray-700 text-gray-400"
+                  >
+                    Recommended cover size is 960 x 640 pixels, with an expect
+                    ratio of 3:2.
+                  </p>
+                </div>
+              </div>
+
+              <div
+                :style="{
+                  display: logoOrHeader == false ? 'flex' : 'none',
+                  flexDirection: 'column'
+                }"
+              >
+                <div class="stepC">
+                  <Attachment
+                    :content="images"
+                    type="logo"
+                    :resizeImage="resizeImage"
+                    label="Upload your brand logo"
+                    description="suggested format: svg, png or gif"
+                    :showAlert="showAlert"
+                  />
+
+                  <p
+                    class="mt-6 border p-4 rounded border-gray-700 text-gray-400"
+                  >
+                    Recommended brand logo size is 350 x 100 pixels.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div id="step-2" class="mt-16">
           <h2 class="font-extrabold text-2xl">vCard information</h2>
+          <Attachment
+            :content="images"
+            type="photo"
+            :resizeImage="resizeImage"
+            label="Upload your headshot"
+            description="suggested format: jpeg, png or gif"
+            :showAlert="showAlert"
+          />
+          <p class="mt-6 border p-4 rounded border-gray-700 text-gray-400">
+            Recommended headshot is 300 x 300 pixels.
+          </p>
+          <br />
+
+          <div class="stepC mt-6">
+            <div>
+              <label for="prefix" class="ml-4">Prefix</label>
+              <input
+                id="prefix"
+                spellcheck="false"
+                type="text"
+                placeholder="Dr./Mr./Prof."
+                v-model="genInfo.prefix"
+                autocapitalize="words"
+                class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+              />
+            </div>
+          </div>
+
           <div class="stepC mt-6 grid grid-cols-2 gap-4">
             <div>
               <label for="firstname" class="ml-4">First name</label>
@@ -203,13 +307,66 @@
           <div class="stepC mt-6">
             <label for="business-address" class="ml-4">Business address</label>
             <input
-              placeholder="123 Main St, City, ST 12345"
-              id="business-address"
-              :value="genInfo.addr"
-              @input="genInfo.addr = $event.target.value"
+              placeholder="Street Address"
+              id="Street"
+              :value="genInfo.street"
+              @input="genInfo.street = $event.target.value"
               class="block mt-2 px-4 py-3 w-full bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 resize-none hover:border-gray-600"
-              rows="4"
             />
+          </div>
+
+          <div class="stepC mt-6 stepC mt-6 grid grid-cols-2 gap-4">
+            <div>
+              <!-- <label for="city" class="ml-4">City</label> -->
+              <input
+                id="city"
+                spellcheck="false"
+                type="text"
+                placeholder="City"
+                v-model="genInfo.city"
+                autocapitalize="words"
+                class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+              />
+            </div>
+            <div>
+              <!-- <label for="state" class="ml-4">State</label> -->
+              <input
+                placeholder="State"
+                id="state"
+                spellcheck="false"
+                type="text"
+                v-model="genInfo.state"
+                autocapitalize="words"
+                class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+              />
+            </div>
+          </div>
+
+          <div class="stepC mt-6 stepC mt-6 grid grid-cols-2 gap-4">
+            <div>
+              <!-- <label for="city" class="ml-4">Postal Code</label> -->
+              <input
+                placeholder="Postal Code"
+                id="Postal Code"
+                spellcheck="false"
+                type="text"
+                v-model="genInfo.postal"
+                autocapitalize="words"
+                class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+              />
+            </div>
+            <div>
+              <!-- <label for="state" class="ml-4">Country</label> -->
+              <input
+                placeholder="Country"
+                id="country"
+                spellcheck="false"
+                type="text"
+                v-model="genInfo.country"
+                autocapitalize="words"
+                class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+              />
+            </div>
           </div>
           <div class="stepC mt-6">
             <label for="business-description" class="ml-4"
@@ -399,8 +556,6 @@
                   v-model="footerCreditCustom"
                   class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
                 />
-
-                <!-- </transition> -->
               </div>
               <p>
                 {{
@@ -412,13 +567,16 @@
 
               <br />
 
-              <script async src="XXXXXXXX"></script>
+              <script
+                async
+                src="XXXXXXXXXXXXXXXXXX-USE-YOUR-THRIVECARD-XXXXXXXXXXXXXXXXXX"
+              ></script>
               <button
                 ref="myPurchaseBtn"
-                data-thrivecart-account="XXX"
-                data-thrivecart-tpl="XXXX"
-                data-thrivecart-product="XXXX"
-                class="thrivecart-button thrivecart-button-styled thrivecart-button_style-rounded thrivecart-button-custom "
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
                 style="background-color: #46cea3;display: none"
               >
                 Buy Agency
@@ -472,53 +630,357 @@
         </div>
 
         <div id="step-6" class="mt-16">
-          <h2 class="font-extrabold text-2xl">Simplify Your Visible vCard?</h2>
+          <h2 class="font-extrabold text-2xl">
+            Simplify Your Visible vCard?
+          </h2>
           <div class="stepC mt-6">
             <div class="flex items-center">
               <div
                 class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
                 :class="{
-                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': simplifyCard
+                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': isFeaturedOn
                 }"
                 tabindex="0"
-                @click="simplifyCard = !simplifyCard"
-                @keypress.space.enter.prevent="simplifyCard = !simplifyCard"
+                @click="isFeaturedOn = !isFeaturedOn"
               >
-                <!-- <transition name="slide"> -->
                 <input
                   type="checkbox"
-                  name="toggle"
-                  aria-label="Toggle footer credit"
-                  id="toggle"
-                  v-model="simplifyCard"
+                  :value="isFeaturedOn"
+                  id="isFeaturedOn"
+                  v-model="isFeaturedOn"
                   class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
-                  tabindex="-1"
                 />
               </div>
               <p>
                 {{
-                  simplifyCard
-                    ? 'Encourage downloads by featuring the Save Contact button only'
-                    : 'Display all actions and content'
+                  isFeaturedOn
+                    ? 'Encourage downloads and hide icons'
+                    : 'No, Thanks'
                 }}
               </p>
 
               <br />
 
-              <script
-                async
-                src="//tinder.thrivecart.com/embed/v1/thrivecart.js"
-              ></script>
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
               <button
                 ref="myPurchaseBtn"
-                data-thrivecart-account="XXX"
-                data-thrivecart-tpl="XXXX"
-                data-thrivecart-product="XXXX"
-                class="thrivecart-button thrivecart-button-styled thrivecart-button_style-rounded thrivecart-button-custom "
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
                 style="background-color: #46cea3;display: none"
               >
                 Buy Agency
               </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="step-6" class="mt-16">
+          <h2 class="font-extrabold text-2xl">
+            Customize Your Favicon?
+          </h2>
+          <div class="stepC mt-6">
+            <div class="flex items-center">
+              <div
+                class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
+                :class="{
+                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': customFavicon
+                }"
+                tabindex="0"
+                @click="customFavicon = !customFavicon"
+              >
+                <!-- <transition name="slide"> -->
+                <input
+                  type="checkbox"
+                  :value="customFavicon"
+                  id="footerCreditCustom"
+                  v-model="customFavicon"
+                  class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
+                />
+              </div>
+              <p>
+                {{
+                  customFavicon
+                    ? 'Yes, I will host my own favicon image'
+                    : 'No, thanks'
+                }}
+              </p>
+
+              <br />
+
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
+              <button
+                ref="myPurchaseBtn"
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
+                style="background-color: #46cea3;display: none"
+              >
+                Buy Agency
+              </button>
+            </div>
+
+            <div
+              :style="{
+                display: customFavicon ? 'flex' : 'none',
+                flexDirection: 'column'
+              }"
+            >
+              <div class="mt-6">
+                <input
+                  id="before-text-link"
+                  spellcheck="false"
+                  type="before-text-link"
+                  placeholder="Enter secure (https://) image URL here
+
+"
+                  :value="genInfo.customFavi"
+                  @input="genInfo.customFavi = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+                <p>Recommended image size is 100 x 100 png</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="step-6" class="mt-16">
+          <h2 class="font-extrabold text-2xl">
+            Customize Your Share Image?
+          </h2>
+          <div class="stepC mt-6">
+            <div class="flex items-center">
+              <div
+                class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
+                :class="{
+                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': shareImage
+                }"
+                tabindex="0"
+                @click="shareImage = !shareImage"
+              >
+                <!-- <transition name="slide"> -->
+                <input
+                  type="checkbox"
+                  :value="shareImage"
+                  id="footerCreditCustom"
+                  v-model="shareImage"
+                  class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
+                />
+              </div>
+              <p>
+                {{
+                  shareImage
+                    ? 'Yes, I will host my own share image'
+                    : 'No, thanks'
+                }}
+              </p>
+
+              <br />
+
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
+              <button
+                ref="myPurchaseBtn"
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
+                style="background-color: #46cea3;display: none"
+              >
+                Buy Agency
+              </button>
+            </div>
+
+            <div
+              :style="{
+                display: shareImage ? 'flex' : 'none',
+                flexDirection: 'column'
+              }"
+            >
+              <div class="mt-6">
+                <input
+                  id="before-text-link"
+                  spellcheck="false"
+                  type="before-text-link"
+                  placeholder="Enter secure (https://) image URL here
+
+"
+                  :value="genInfo.shareImg"
+                  @input="genInfo.shareImg = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+                <p>Recommended image size is 1200 x 630 png</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="step-6" class="mt-16">
+          <h2 class="font-extrabold text-2xl">
+            Customize Your Bookmark Image?
+          </h2>
+          <div class="stepC mt-6">
+            <div class="flex items-center">
+              <div
+                class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
+                :class="{
+                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': bookMarkImage
+                }"
+                tabindex="0"
+                @click="bookMarkImage = !bookMarkImage"
+              >
+                <!-- <transition name="slide"> -->
+                <input
+                  type="checkbox"
+                  :value="bookMarkImage"
+                  id="footerCreditCustom"
+                  v-model="bookMarkImage"
+                  class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
+                />
+              </div>
+              <p>
+                {{
+                  bookMarkImage
+                    ? 'Yes, I will host my own Bookmark image. This is supported on iPhone only, not on Android.'
+                    : 'No, thanks'
+                }}
+              </p>
+
+              <br />
+
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
+              <button
+                ref="myPurchaseBtn"
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
+                style="background-color: #46cea3;display: none"
+              >
+                Buy Agency
+              </button>
+            </div>
+
+            <div
+              :style="{
+                display: bookMarkImage ? 'flex' : 'none',
+                flexDirection: 'column'
+              }"
+            >
+              <div class="mt-6">
+                <input
+                  id="before-text-link"
+                  spellcheck="false"
+                  type="before-text-link"
+                  placeholder="Enter secure (https://) image URL here
+
+"
+                  :value="genInfo.bookMarkImg"
+                  @input="genInfo.bookMarkImg = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+                <p>Recommended image size is 128 x 128 png</p>
+                <input
+                  id="before-text-link"
+                  spellcheck="false"
+                  type="before-text-link"
+                  placeholder="Enter your bookmark title"
+                  :value="genInfo.bookMarkTitle"
+                  @input="genInfo.bookMarkTitle = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="step-6" class="mt-16">
+          <h2 class="font-extrabold text-2xl">Customize your Meta Data</h2>
+          <div class="stepC mt-6">
+            <div class="flex items-center">
+              <div
+                class="relative group inline-block w-24 h-12 mr-3 align-middle select-none transition duration-200 ease-in bg-gray-700 rounded hover:bg-gray-600 focus:bg-gray-600 cursor-pointer focus:outline-none"
+                :class="{
+                  'bg-green-600 hover:bg-green-500 focus:bg-green-500': metaData
+                }"
+                tabindex="0"
+                @click="metaData = !metaData"
+              >
+                <!-- <transition name="slide"> -->
+                <input
+                  type="checkbox"
+                  :value="metaData"
+                  id="metaData"
+                  v-model="metaData"
+                  class="toggle-switch absolute block w-10 h-10 m-1 rounded border-4 border-transparent appearance-none cursor-pointer transition-colors duration-200 focus:outline-none bg-white"
+                />
+              </div>
+              <p>
+                {{
+                  metaData ? 'Yes, I will customize my meta data' : 'No, thanks'
+                }}
+              </p>
+
+              <br />
+
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
+              <button
+                ref="myPurchaseBtn"
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
+                style="background-color: #46cea3;display: none"
+              >
+                Buy Agency
+              </button>
+            </div>
+
+            <div
+              :style="{
+                display: metaData ? 'flex' : 'none',
+                flexDirection: 'column'
+              }"
+            >
+              <div class="mt-6">
+                <label for="before-text-link" class="ml-4">Name</label>
+                <input
+                  id="before-text-link"
+                  spellcheck="false"
+                  type="before-text-link"
+                  placeholder="Enter your personal name or business name"
+                  :value="genInfo.metaName"
+                  @input="genInfo.metaName = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+              </div>
+
+              <div class="mt-6">
+                <label for="linkedText" class="ml-4">Content</label>
+                <input
+                  id="linkedText"
+                  spellcheck="false"
+                  type="linkedText"
+                  placeholder="Enter your product or service name"
+                  :value="genInfo.metaContent"
+                  @input="genInfo.metaContent = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+              </div>
+
+              <div class="mt-6">
+                <label for="linkedText" class="ml-4">URL</label>
+                <input
+                  id="linkedText"
+                  spellcheck="false"
+                  type="linkedText"
+                  placeholder="Enter your card offer URL (https://)"
+                  :value="genInfo.metaURL"
+                  @input="genInfo.metaURL = $event.target.value"
+                  class="mt-2 px-4 w-full h-12 bg-black rounded border border-transparent transition-colors duration-200 focus:outline-none focus:border-gray-600 hover:border-gray-600"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -554,16 +1016,13 @@
 
               <br />
 
-              <script
-                async
-                src="//tinder.thrivecart.com/embed/v1/thrivecart.js"
-              ></script>
+              <script async src="XXXXXXXXXXXXXXXXXX"></script>
               <button
                 ref="myPurchaseBtn"
-                data-thrivecart-account="XXX"
-                data-thrivecart-tpl="XXXX"
-                data-thrivecart-product="XXXX"
-                class="thrivecart-button thrivecart-button-styled thrivecart-button_style-rounded thrivecart-button-custom "
+                data-thrivecart-account="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-tpl="XXXXXXXXXXXXXXXXXX"
+                data-thrivecart-product="XXXXXXXXXXXXXXXXXX"
+                class="XXXXXXXXXXXXXXXXXX "
                 style="background-color: #46cea3;display: none"
               >
                 Buy Agency
@@ -627,7 +1086,6 @@
             />
           </div>
         </div>
-
         <div id="step-10" class="mt-16">
           <h2 class="font-extrabold text-2xl">Analytics</h2>
           <div class="stepC mt-6">
@@ -715,11 +1173,21 @@
                 :secondaryActions="secondaryActions"
                 :PreviewMode="PreviewMode"
                 :footerCreditCustom="footerCreditCustom"
+                :logoOrHeader="logoOrHeader"
+                :customFavicon="customFavicon"
+                :shareImage="shareImage"
+                :bookMarkImage="bookMarkImage"
+                :bookMarkImg="bookMarkImg"
+                :bookMarkTitle="bookMarkTitle"
                 :seoOptimization="seoOptimization"
+                :metaData="metaData"
                 :downloadVcard="downloadVcard"
                 :footerCredit="footerCredit"
                 :seoOpti="seoOpti"
                 :simplifyCard="simplifyCard"
+                :isFeaturedOn="isFeaturedOn"
+                :customFavi="customFavi"
+                :shareImg="shareImg"
                 :showAlert="showAlert"
                 :hasLightBG="hasLightBG"
                 :downloadKey="downloadKey"
@@ -771,7 +1239,7 @@
             <div class="form-group mt-20">
               <facebook-login
                 class="facebook_button"
-                appId="XXXXXXXXXXXXXXXXXXXX"
+                appId="887044392215661"
                 logoutLabel="Download With Facebook"
                 loginLabel="Download With Facebook"
                 @login="onLogin"
@@ -884,11 +1352,19 @@
 </template>
 
 <script>
+// import GoogleSpreadsheet from 'google-spreadsheet'
+
+// import { StripeElements, StripeElement } from 'vue-stripe-elements-plus'
 import GoogleLogin from 'vue-google-login'
 import facebookLogin from 'facebook-login-vuejs'
 import swal from 'sweetalert2'
 window.Swal = swal
-
+import {
+  createAvatar,
+  payToDownloadZip,
+  saveToGoogleSheet,
+  checkLicense
+} from './../utils/api.js'
 import { PublicClientApplication } from '@azure/msal-browser'
 import Modal from '@/components/Modal'
 import Attachment from '@/components/Attachment'
@@ -927,6 +1403,8 @@ export default {
     Footer,
     Vcard,
     draggable
+    // StripeElements,
+    // StripeElement,
   },
 
   head: {
@@ -947,8 +1425,8 @@ export default {
       account: undefined,
       msalConfig: {
         auth: {
-          clientId: 'XXXXXXXXXXXXXXXXXX',
-          authority: 'XXXXXXXXXXX/common/',
+          clientId: '2b73afee-6100-44cd-a65f-e7d65ea2e0c1',
+          authority: 'https://login.microsoftonline.com/common/',
           redirectUri: 'https://www.smartvcard.com/'
         },
         cache: {
@@ -972,7 +1450,8 @@ export default {
         }
       ],
       params: {
-        client_id: 'XXXXXXXXXXXXXXXXXXXXXXX.apps.googleusercontent.com'
+        client_id:
+          '440981969658-9fmc3sduiha6un6uk1fnvvhvo8m34rrf.apps.googleusercontent.com'
       },
       // only needed if you want to render the button with the google ui
       renderParams: {
@@ -998,11 +1477,20 @@ export default {
       phone: '',
       address: '',
       amount: 27,
-
+      stripeKey: 'XXXXXX', // test key, publishable key
+      instanceOptions: {
+        // https://stripe.com/docs/js/initializing#init_stripe_js-options
+      },
+      elementsOptions: {
+        // https://stripe.com/docs/js/elements_object/create#stripe_elements-options
+      },
       cardOptions: {
+        // reactive
+        // remember about Vue 2 reactivity limitations when dealing with options
         value: {
           postalCode: ''
         }
+        // https://stripe.com/docs/stripe.js#element-options
       },
       images: {
         logo: {
@@ -1013,6 +1501,13 @@ export default {
           resized: null
         },
         photo: {
+          url: null,
+          blob: null,
+          ext: null,
+          mime: null,
+          resized: null
+        },
+        cover: {
           url: null,
           blob: null,
           ext: null,
@@ -1047,6 +1542,7 @@ export default {
       },
 
       genInfo: {
+        prefix: null,
         fname: null,
         lname: null,
         pronouns: null,
@@ -1060,12 +1556,29 @@ export default {
         fontLink: null,
         fontCss: null,
         pronouns: null,
-        addr: null,
+        street: '',
+        city: '',
+        state: '',
+        postal: '',
+        city: '',
+        country: '',
+        // addr: city + " " + state + " " + postal + " " + country,
         beforeTextLink: null,
         linkedText: null,
         url: null,
         seoTitle: null,
-        metaDescription: null
+        metaDescription: null,
+        customFavi: null,
+        shareImg: null,
+        bookMarkImg: null,
+        bookMarkTitle: null,
+        metaName: null,
+        metaContent: null,
+        metaURL: null
+
+        // metaDesigner:null,
+        // ogTitle:null,
+        // twitterTitle:null
       },
       altHeadShot: null,
       primaryActions: [],
@@ -1077,104 +1590,120 @@ export default {
           {
             name: 'call',
             href: 'tel:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Phone number'
+            label: 'Your Phone Number'
           },
           {
             name: 'Mobile',
             href: 'tel:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Mobile number'
+            label: 'Your Mobile Number'
           },
           {
             name: 'Office',
             href: 'tel:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Office number'
+            label: 'Your Office Number'
           },
           {
             name: 'fax',
             href: 'tel:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Fax Number'
+            label: 'Your Fax Number'
           },
           {
             name: 'Home',
             href: 'tel:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Home number'
+            label: 'You Home Number'
           },
           {
             name: 'SMS',
             href: 'SMS:',
-            placeholder: '+1 XXX XXX XXXX',
+            placeholder: '+1XXXXXXXXXX',
             value: null,
-            label: 'Phone number to send the SMS'
+            label: 'Your SMS Receiving Number'
           },
           {
             name: 'whatsApp',
             placeholder: 'https://wa.me/profileID',
             value: null,
-            label: 'WhatsApp profile URL'
+            label: 'Your WhatsApp URL'
           },
           {
             name: 'messenger',
             href: 'https://m.me/',
             placeholder: 'username',
             value: null,
-            label: 'Facebook Messanger Link'
+            label: 'Your Messenger Username'
           },
           {
             name: 'telegram',
             href: 'https://t.me/',
             placeholder: 'username',
             value: null,
-            label: 'Telegram profile URL'
+            label: 'Your Telegram Username'
           },
           {
             name: 'email',
             href: 'mailto:',
             placeholder: 'info@example.com',
             value: null,
-            label: 'Email address'
+            label: 'Your Email Address'
           },
           {
             name: 'website',
             placeholder: 'https://example.com',
             value: null,
-            label: 'Website URL'
+            label: 'Your Website URL'
           },
+          // {
+          //   name: 'google',
+          //   placeholder: 'https://example.com',
+          //   value: null,
+          //   label: 'Google Chat URL'
+          // },
           {
             name: 'calendar',
             placeholder: 'https://example.com',
             value: null,
-            label: 'Calender'
+            label: 'Your Calendar URL'
           },
           {
             name: 'store',
             placeholder: 'https://example.com/storeID',
             value: null,
-            label: 'Online Store URL'
+            label: 'Your Store URL'
           },
           {
             name: 'location',
             placeholder: 'https://goo.gl/maps/location',
             value: null,
-            label: 'Map location URL'
+            label: 'Your Maps Location URL'
           },
-
+          // {
+          //   name: 'Signal',
+          //   icon: 'signal',
+          //   href: 'tel:',
+          //   placeholder: '+XX XXXXX XXXXX',
+          //   value: null,
+          //   label: 'Signal mobile number',
+          //   order: 8,
+          //   isURL: 0,
+          // },
           {
             name: 'Matrix',
             icon: 'matrix',
             href: 'https://matrix.to/#/',
-            placeholder: '@username:matrix.org',
+            placeholder: '@username',
             value: null,
-            label: 'Matrix userID',
+            hrefEnd: ':matrix.org',
+            label: 'Your Matrix Username',
             order: 10,
             isURL: 1
           },
@@ -1185,17 +1714,17 @@ export default {
             hrefEnd: '?chat',
             placeholder: 'username',
             value: null,
-            label: 'Skype username',
+            label: 'Your Skype Username',
             order: 13,
             isURL: 1
           },
           {
             name: 'Line',
             icon: 'line',
-            href: 'https://line.me/ti/p/',
-            placeholder: 'LINE ID',
+            // href: 'https://line.me/ti/p/',
+            placeholder: 'https://line.me/ti/p/link',
             value: null,
-            label: 'Line profile ID',
+            label: 'Your LINE ID URL',
             order: 14,
             isURL: 1
           },
@@ -1205,64 +1734,94 @@ export default {
             href: 'viber://chat?number=',
             placeholder: 'XX XXXXX XXXXX',
             value: null,
-            label: 'Viber mobile number',
+            label: 'Your Viber Number',
             order: 15,
             isURL: 1
+          },
+          {
+            name: 'WeChat',
+            placeholder: 'WeChat ID',
+            value: null,
+            label: 'Your WeChatID',
+            href: 'weixin://dl/chat?'
+          },
+          {
+            name: 'Zalo',
+            placeholder: 'https://zalo.me/zaloid',
+            value: null,
+            label: 'Your Zalo URL'
           }
+          // {
+          //   name: 'WeChat',
+          //   icon: 'wechat',
+          //   href: 'weixin://dl/chat?',
+          //   placeholder: 'WeChat ID',
+          //   value: null,
+          //   label: 'WeChat profile ID',
+          //   order: 16,
+          //   isURL: 1
+          // }
+          // {
+          //   name: 'Review',
+          //   placeholder: 'https://example.com',
+          //   value: null,
+          //   label: 'Review Link'
+          // }
         ],
         secondaryActions: [
           {
             name: 'App Store',
             icon: 'appstore',
-            placeholder: 'https://apps.apple.com/in/app/appname/id',
+            placeholder: 'https://apps.apple.com/in/appname',
             value: null,
             color: 'linear-gradient(#5fc9f8, #147efb)',
-            label: 'App Store developer/app URL'
+            label: 'Your App Store URL'
           },
+
           {
             name: 'ArtStation',
             icon: 'artstation',
-            href: 'https://www.artstation.com/',
-            placeholder: 'username',
+            // href: 'https://www.artstation.com/username',
+            placeholder: 'https://www.artstation.com/username',
             value: null,
             color: '#171717',
-            label: 'ArtStation username'
+            label: 'Your Art Station URL'
           },
           {
             name: 'behance',
-            href: 'https://behance.net/',
-            placeholder: 'username',
+            // href: 'https://behance.net/',
+            placeholder: 'https://behance.net/BehanceUserName',
             value: null,
             color: '#1769ff',
-            label: 'Behance profile URL'
+            label: 'Your Behance URL'
           },
           {
             name: 'Buy me a coffee',
             icon: 'buymeacoffee',
-            href: 'https://www.buymeacoffee.com/',
-            placeholder: 'username',
+            // href: 'https://www.buymeacoffee.com/',
+            placeholder: 'https://www.buymeacoffee.com/UserName',
             value: null,
             color: '#ffdd00',
             light: 1,
-            label: 'Buy me a coffee username'
+            label: 'Your Buy me a coffee URL'
           },
           {
             name: 'Cash App',
             icon: 'cashapp',
-            href: 'https://cash.app/',
-            placeholder: '$username',
+            // href: 'https://cash.app/',
+            placeholder: 'https://cash.app/UserName',
             value: null,
             color: '#fff',
             light: 1,
-            label: 'Cash App username'
+            label: 'Your Cash App URL'
           },
           {
             name: 'codeberg',
-            href: 'https://codeberg.org/',
-            placeholder: 'username',
+            // href: 'https://codeberg.org/',
+            placeholder: 'https://codeberg.org/UserName',
             value: null,
             color: '#2185d0',
-            label: 'Codeberg profile URL'
+            label: 'Your Codeberg URL'
           },
           {
             name: 'diaspora',
@@ -1273,254 +1832,403 @@ export default {
           },
           {
             name: 'discord',
-            placeholder: 'https://discord.gg/invitecode',
+            placeholder: 'https://discord.gg/UserName',
             value: null,
             color: '#7289da',
-            label: 'Discord profile URL'
+            label: 'Your Discord URL'
           },
           {
             name: 'dribbble',
-            href: 'https://dribbble.com/',
-            placeholder: 'username',
+            // href: 'https://dribbble.com/',
+            placeholder: 'https://dribbble.com/UserName',
             value: null,
             color: '#ea4c89',
-            label: 'Dribbble profile URL'
+            label: 'Your Dribble URL'
           },
           {
             name: 'facebook',
-            href: 'https://facebook.com/',
-            placeholder: 'username or pagename',
+            // href: 'https://facebook.com/',
+            placeholder: 'https://facebook.com/UserName',
             value: null,
             color: '#1877f2',
-            label: 'Facebook page URL'
+            label: 'Your Facebook URL'
           },
           {
             name: 'friendica',
-            placeholder: 'https://friendica.social/username',
+            placeholder: 'https://friendica.social/UserName',
             value: null,
             color: '#1d6e9a',
-            label: 'Friendica profile URL'
+            label: 'Your Friendica URL'
           },
           {
             name: 'funkwhale',
-            placeholder: 'https://funkwhale.audio/username',
+            placeholder: 'https://funkwhale.audio/UserName',
             value: null,
             color: '#ffffff',
-            label: 'Funkwhale profile URL'
+            label: 'Your Funkwhale URL'
           },
           {
             name: 'github',
-            href: 'https://github.com/',
-            placeholder: 'username',
+            // href: 'https://github.com/',
+            placeholder: 'https://github.com/ProfileId',
             value: null,
             color: '#333',
-            label: 'Github profile URL'
+            label: 'Your Github URL'
           },
           {
             name: 'gitlab',
-            href: 'https://gitlab.com/',
-            placeholder: 'username',
+            // href: 'https://gitlab.com/',
+            placeholder: 'https://gitlab.com/ProfileId',
             value: null,
             color: '#554488 ',
-            label: 'Gitlab profile URL'
+            label: 'Your Gitlab URL'
           },
           {
             name: 'instagram',
-            href: 'https://instagram.com/',
-            placeholder: 'username',
+            // href: 'https://instagram.com/',
+            placeholder: 'https://instagram.com/UserName',
             value: null,
             color: '#405de6',
             // color: '#ffffff',
-            label: 'Instagram profile URL'
+            label: 'Your Instagram URL'
           },
           {
             name: 'linkedin',
-            href: 'https://linkedin.com/',
-            placeholder: 'in/username or company/companyname',
+            // href: 'https://linkedin.com/',
+            placeholder: 'https://linkedin.com/in/UserName',
             value: null,
             color: '#0077b5',
-            label: 'Linkedin profile URL'
+            label: 'Your Linkedin URL'
           },
           {
             name: 'mastodon',
-            placeholder: 'https://mastodon.social/@username',
+            placeholder: 'https://mastodon.social/@UserName',
             value: null,
             color: '#2b90d9',
-            label: 'Mastodon profile URL'
+            label: 'Your Mastadon URL'
           },
           {
             name: 'medium',
             placeholder: 'https://medium.com/publication_name',
             value: null,
             color: '#000000',
-            label: 'Medium publication'
+            label: 'Your Medium URL'
           },
           {
             name: 'open-collective',
-            href: 'https://opencollective.com/',
-            placeholder: 'projectname',
+            // href: 'https://opencollective.com/',
+            placeholder: 'https://opencollective.com/ProjectName',
             value: null,
             color: '#fff',
-            label: 'Open Collective URL'
+            label: 'Your Open-collective URL'
           },
           {
             name: 'patreon',
-            href: 'https://patreon.com/',
-            placeholder: 'username',
+            // href: 'https://patreon.com/',
+            placeholder: 'https://patreon.com/UserName',
             value: null,
             color: '#FF424D',
-            label: 'Patreon URL'
+            label: 'Your Patreon URL'
           },
           {
             name: 'paypal',
-            href: 'https://paypal.me/',
-            placeholder: 'username',
+            // href: 'https://paypal.me/',
+            placeholder: 'https://paypal.me/UserName',
             value: null,
             color: '#003087',
-            label: 'PayPal.me URL'
+            label: 'Your Paypal URL'
           },
           {
             name: 'peertube',
             placeholder: 'https://peertube.video/channelname',
             value: null,
             color: '#ffffff',
-            label: 'Peertube channel URL'
+            label: 'Your Peertube URL'
           },
           {
             name: 'pinterest',
-            href: 'https://pinterest.com/',
-            placeholder: 'username',
+            // href: 'https://pinterest.com/UserName',
+            placeholder: 'https://pinterest.com/UserName',
             value: null,
             color: '#bd081c',
-            label: 'Pinterest profile URL'
+            label: 'Your Pinterest URL'
           },
           {
             name: 'pixelfed',
-            placeholder: 'https://pixelfed.social/username',
+            placeholder: 'https://pixelfed.social/UserName',
             value: null,
             color: '#8d59a8',
-            label: 'Pixelfed profile URL'
+            label: 'Your Pixelfed URL'
           },
           {
             name: 'Play Store',
             icon: 'playstore',
-            placeholder: 'https://play.google.com/store/apps/details?id=',
+            placeholder: 'https://play.google.com/store/apps/details?id=AppUrl',
             value: null,
             color: '#fff',
             light: 1,
-            label: 'Play Store developer/app URL'
+            label: 'Your Playstore URL'
           },
           {
             name: 'quora',
-            href: 'https://quora.com/',
-            placeholder: 'username',
+            // href: 'https://quora.com/',
+            placeholder: 'https://quora.com/UserName',
             value: null,
             color: '#a82400',
-            label: 'Quora profile URL'
+            label: 'Your Quora URL'
           },
           {
             name: 'reddit',
-            href: 'https://reddit.com/',
-            placeholder: 'username',
+            // href: 'https://reddit.com/',
+            placeholder: 'https://reddit.com/userName',
             value: null,
             color: '#ff5700',
-            label: 'Reddit profile URL'
+            label: 'Your Reddit URL'
           },
           {
             name: 'Siilo',
             icon: 'siilo',
-            href: 'https://app.siilo.com/qr/',
-            placeholder: 'userid',
+            // href: 'https://app.siilo.com/qr/',
+            placeholder: 'https://app.siilo.com/qr/userId',
             value: null,
             color: '#17233b',
-            label: 'Siilo userid'
+            label: 'Your Siilo URL'
+          },
+          {
+            name: 'Skool',
+            icon: 'Skool',
+            // href: 'https://app.siilo.com/qr/',
+            placeholder: 'https://skool.com/@usernameorlink',
+            value: null,
+            color: '#FFFFFF',
+            label: 'Your Skool URL'
           },
           {
             name: 'snapchat',
             placeholder: 'https://snapchat.com/username',
             value: null,
             color: '#fffc00',
-            label: 'Snapchat profile URL'
+            label: 'Your Snachat URL'
           },
           {
             name: 'soundcloud',
             placeholder: 'https://soundcloud.com/username',
             value: null,
             color: '#ff3300',
-            label: 'Soundcloud profile URL'
+            label: 'Your Soundcloud URL'
           },
           {
             name: 'spotify',
-            placeholder: 'https://spotify.com/username',
+            placeholder: 'https://spotify.com/UserName',
             value: null,
             color: '#1ed760',
-            label: 'Spotify profile URL'
+            label: 'Your Spotify URL'
+          },
+          {
+            name: 'threads',
+            icon: 'threads',
+            placeholder: 'https://www.threads.net/username',
+            value: null,
+            color: '#000',
+            label: 'Your Thread URL'
           },
           {
             name: 'TikTok',
             icon: 'tiktok',
-            href: 'https://tiktok.com/',
-            placeholder: 'username',
+            // href: 'https://tiktok.com/',
+            placeholder: 'https://tiktok.com/UserName',
             value: null,
             color: '#fff',
-            label: 'TikTok profile URL'
+            label: 'Your TikTok URL'
           },
+
           {
             name: 'tumblr',
             value: null,
             color: '#2c4762',
-            href: 'https://',
-            hrefEnd: '.tumblr.com/',
-            placeholder: 'username',
-            label: 'Tumblr blog URL'
+            // href: 'https://',
+            // hrefEnd: '.tumblr.com/',
+            placeholder: 'https://UserName.tumblr.com/',
+            label: 'Your Tumblr URL'
           },
           {
             name: 'twitch',
-            href: 'https://twitch.tv/',
-            placeholder: 'username',
+            // href: 'https://twitch.tv/',
+            placeholder: 'https://twitch.tv/UserName',
             value: null,
             color: '#9146ff',
-            label: 'Twitch profile URL'
+            label: 'Your Twitch URL'
           },
           {
             name: 'twitter',
-            href: 'https://twitter.com/',
-            placeholder: 'username',
+            // href: 'https://twitter.com/',
+            placeholder: 'https://twitter.com/UserName',
             value: null,
-            color: '#1da1f2',
-            label: 'Twitter profile URL'
+            // color: '#1da1f2',
+            color: '#000',
+            label: 'Your Twitter URL'
           },
           {
             name: 'vimeo',
-            href: 'https://vimeo.com/',
-            placeholder: 'channelname',
+            // href: 'https://vimeo.com/',
+            placeholder: 'https://vimeo.com/channelName',
             value: null,
             color: '#1ab7ea',
-            label: 'Vimeo channel URL'
+            label: 'Your Vimeo URL'
           },
           {
             name: 'vk',
-            href: 'https://vk.com/',
-            placeholder: 'pagename',
+            // href: 'https://vk.com/',
+            placeholder: 'https://vk.com/PageName',
             value: null,
             color: '#4a76a8',
-            label: 'VK page URL'
+            label: 'Your Vk URL'
           },
           {
             name: 'yelp',
-            href: 'https://yelp.com/',
-            placeholder: 'bizname',
+            // href: 'https://yelp.com/',
+            placeholder: 'https://yelp.com/BizName',
             value: null,
             color: '#fff',
-            label: 'Yelp page URL'
+            label: 'Your Yelp URL'
           },
           {
             name: 'youtube',
-            href: 'https://youtube.com/',
-            placeholder: 'channel name or ID',
+            // href: 'https://youtube.com/',
+            placeholder: 'https://youtube.com/ChannelUserName',
             value: null,
             color: '#ff0000',
-            label: 'Youtube channel URL'
+            label: 'Your YouTube URL'
+          },
+          {
+            name: 'Venmo',
+            // href: 'https://venmo.com',
+            placeholder: 'https://venmo.com/u/UserName',
+            value: null,
+            color: '#008cff',
+            label: 'Your Venmo URL'
+          },
+          {
+            name: 'Beamer',
+            // href: 'https://bemer.com/BeamerId',
+            placeholder: 'https://bemer.com/BeamerId',
+            value: null,
+            color: '#ffcc1c',
+            label: 'Your Beamer URL'
+          },
+          {
+            name: 'Caviar',
+            // href: 'https://caviar.com/',
+            placeholder: 'https://caviar.com/CaviarId',
+            value: null,
+            color: '#f97242',
+            label: 'Your Caviar URL'
+          },
+
+          {
+            name: 'ChowNow',
+            // href: 'https://chownow.com/',
+            placeholder: 'https://chownow.com/ChowNowId',
+            value: null,
+            color: '#fd4f57',
+            label: 'Your ChowNow URL'
+          },
+
+          {
+            name: 'Delivery.com',
+            // href: 'https://Delivery.com/',
+            placeholder: 'https://Delivery.com/UserName',
+            value: null,
+            color: '#1f5ea9',
+            label: 'Your Delivery.com URL'
+          },
+
+          {
+            name: 'Doordash',
+            // href: 'https://Doordash.com/UserName',
+            placeholder: 'https://Doordash.com/UserName',
+            value: null,
+            color: '#ef3b24',
+            label: 'Your Doordash URL'
+          },
+
+          {
+            name: 'Grubhub',
+            // href: 'https://Grubhub.com/',
+            placeholder: 'https://Grubhub.com/UserName',
+            value: null,
+            color: '#ff8000',
+            label: 'Your Grubhub URL'
+          },
+
+          {
+            name: 'Postmates',
+            // href: 'https://Postmates.com/',
+            placeholder: 'https://Postmates.com/PostmatesUserName',
+            value: null,
+            color: '#ffe13c',
+            label: 'Your Postmates URL'
+          },
+
+          {
+            name: 'Seamless',
+            // href: 'https://Seamless.com/',
+            placeholder: 'https://Seamless.com/UserName',
+            value: null,
+            color: '#cf202a',
+            label: 'Your Seamless URL'
+          },
+
+          {
+            name: 'Uber Eats',
+            // href: 'https://ubereats.com/',
+            placeholder: 'https://ubereats.com/UserName',
+            value: null,
+            color: '#142328',
+            label: 'Your Uber Eats URL'
+          },
+
+          {
+            name: 'Rappi',
+            icon: 'RAPPI',
+            // href: 'https://ubereats.com/',
+            placeholder: 'https://www.rappi.com.mx/url',
+            value: null,
+            color: '#ff4940',
+            label: 'Your RAPPI URL'
+          },
+
+          {
+            name: 'Gumroad',
+            placeholder: 'https://userid.gumroad.com/',
+            value: null,
+            color: '#ff90e8',
+            label: 'Your GUMROAD URL'
+          },
+          {
+            // Square renamed
+            name: 'Square',
+            // href: 'https://ubereats.com/',
+            placeholder: 'https://checkout.square.site/merchanturl',
+            value: null,
+            color: '#ffffff',
+            label: 'Your SQUARE URL'
+          },
+          {
+            name: 'HighLevel',
+            // href: 'https://ubereats.com/',
+            placeholder: 'https://gohighlevel.com/url',
+            value: null,
+            color: '#08213d',
+            label: 'Your SQUARE URL'
+          },
+          {
+            name: 'Little Red Book',
+            // href: 'https://ubereats.com/',
+            placeholder: 'https://www.xiaohongshu.com/user/profile/',
+            value: null,
+            color: '#FF2E4D',
+            label: 'Your Little Red Book URL'
           }
         ]
       },
@@ -1533,10 +2241,19 @@ export default {
       hostedURL: null,
       footerCredit: true,
       footerCreditCustom: false,
+      logoOrHeader: false,
       customFavicon: false,
+      shareImage: false,
       seoOpti: true,
       seoOptimization: false,
+      metaData: false,
       simplifyCard: false,
+      isFeaturedOn: false,
+      customFavi: true,
+      bookMarkImg: null,
+      bookMarkImage: false,
+      bookMarkTitle: false,
+      shareImg: null,
       PreviewMode: true,
       content: null,
       inView: false,
@@ -1555,9 +2272,12 @@ export default {
       )
     },
     getFullname() {
+      let pr = this.genInfo.prefix
       let fn = this.genInfo.fname
       let ln = this.genInfo.lname
-      return (fn + ln).length ? `${fn ? fn : ''}${ln ? ' ' + ln : ''}` : null
+      return (pr + fn + ln).length
+        ? `${pr ? pr : ''}${fn ? fn : ''}${ln ? ' ' + ln : ''}`
+        : null
     },
     pubKeyIsValid() {
       if (this.genInfo.key) {
@@ -1613,8 +2333,8 @@ export default {
         let aotherpieces = res.split(/[\s,]+/)
         lastEncodedPart = aotherpieces[pieces.length - 1]
       }
-      console.log(lastEncodedPart)
-      console.log(this.altHeadShot)
+      // console.log(lastEncodedPart)
+      // console.log(this.altHeadShot)
       let phoneNumbers = this.primaryActions
         .map(e => (e.name == 'call' ? e.value : null))
         .filter(e => e)
@@ -1623,6 +2343,9 @@ export default {
         .map(e => (e.name == 'Mobile' ? e.value : null))
         .filter(e => e)
 
+      let Calendar = this.primaryActions
+        .map(e => (e.name == 'calendar' ? e.value : null))
+        .filter(e => e)[0]
       let FAX = this.primaryActions
         .map(e => (e.name == 'fax' ? e.value : null))
         .filter(e => e)
@@ -1631,8 +2354,16 @@ export default {
         .map(e => (e.name == 'Home' ? e.value : null))
         .filter(e => e)
 
+      let WeChat = this.primaryActions
+        .map(e => (e.name == 'WeChat' ? e.value : null))
+        .filter(e => e)[0]
+
       let WHATSAPP = this.primaryActions
         .map(e => (e.name == 'whatsApp' ? e.value : null))
+        .filter(e => e)[0]
+
+      let MESSENGER = this.primaryActions
+        .map(e => (e.name == 'messenger' ? e.value : null))
         .filter(e => e)[0]
 
       let WORK = this.primaryActions
@@ -1705,6 +2436,7 @@ export default {
       let randomNumber = Math.floor(100000000 + Math.random() * 900000)
 
       return {
+        pr: this.genInfo.prefix,
         fn: this.genInfo.fname,
         ln: this.genInfo.lname,
         title: this.genInfo.title,
@@ -1713,7 +2445,10 @@ export default {
         work: getNumber('Office'),
         home: getNumber('Home'),
         sms: getNumber('SMS'),
+        WeChat: WeChat !== undefined ? `${'weixin://dl/chat?'}` + WeChat : null,
         signal: getNumber('Signal'),
+        Calendar: Calendar,
+        messenger: MESSENGER !== undefined ? `https://m.me/${MESSENGER}` : '',
         website: website,
         email,
         hostedURL: this.hostedURL,
@@ -1739,71 +2474,491 @@ export default {
           lastEncodedPart !== undefined ? lastEncodedPart : this.altHeadShot,
         NOTE: note,
         WHATSAPP: WHATSAPP,
-        ADDRESS: this.genInfo.addr
+        ADDRESS:
+          this.genInfo.street +
+          ';' +
+          this.genInfo.city +
+          ';' +
+          this.genInfo.state +
+          ';' +
+          this.genInfo.postal +
+          ';' +
+          this.genInfo.country
       }
     }
   },
   watch: {
+    username: {
+      async handler(newValue, oldValue) {
+        if (this.images.photo.url === null) {
+          let response = await createAvatar(
+            this.genInfo.fname,
+            this.genInfo.lname
+          )
+          this.altHeadShot = response
+        }
+      }
+    },
     simplifyCard: {
       async handler(newValue, oldValue) {
         if (newValue === true) {
-          this.simplifyCard = false
-          Swal.fire({
-            title: 'Error!',
-            text: `Use Your Thrive Cart Here`,
-            icon: 'error',
-            confirmButtonText: 'Ok'
-          })
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                // alert('BYE BYE TA TA')
+                this.simplifyCard = false
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.simplifyCard = true
+              return
+            }
+          } else {
+            this.simplifyCard = false
+            // alert('Please login or buy an agency')
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
+        }
+      },
+      deep: true
+    },
+    isFeaturedOn: {
+      async handler(newValue, oldValue) {
+        if (newValue === true) {
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+              // alert(
+              //   `ERROR CODE:- ${response.status} REASON: ${response.data.message}`
+              // )
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                // alert('BYE BYE TA TA')
+
+                this.isFeaturedOn = true
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.isFeaturedOn = true
+              return
+            }
+          } else {
+            this.isFeaturedOn = false
+            // alert('Please login or buy an agency')
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
+        }
+      },
+      deep: true
+    },
+    customFavicon: {
+      async handler(newValue, oldValue) {
+        if (newValue === true) {
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+              // alert(
+              //   `ERROR CODE:- ${response.status} REASON: ${response.data.message}`
+              // )
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                this.customFavicon = false
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.customFavicon = true
+              return
+            }
+          } else {
+            this.customFavicon = false
+            // alert('Please login or buy an agency')
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
+        }
+      },
+      deep: true
+    },
+    shareImage: {
+      async handler(newValue, oldValue) {
+        if (newValue === true) {
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                // alert('BYE BYE TA TA')
+                this.shareImage = false
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.shareImage = true
+              return
+            }
+          } else {
+            this.shareImage = false
+            // alert('Please login or buy an agency')
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
+        }
+      },
+      deep: true
+    },
+    bookMarkImage: {
+      async handler(newValue, oldValue) {
+        if (newValue === true) {
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                // alert('BYE BYE TA TA')
+                this.bookMarkImage = false
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.bookMarkImage = true
+              return
+            }
+          } else {
+            this.bookMarkImage = false
+
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
         }
       },
       deep: true
     },
     footerCreditCustom: {
       async handler(newValue, oldValue) {
-        // Zia new work
-        // console.log(newValue)
         if (newValue === true) {
-          this.footerCreditCustom = false
-          Swal.fire({
-            title: 'Error!',
-            text: `Use Your Thrive Cart Here`,
-            icon: 'error',
-            confirmButtonText: 'Ok'
-          })
+          let isPresent = localStorage.getItem('license_key')
+          if (isPresent !== null) {
+            let licenseKey = localStorage.getItem('license_key')
+            let response = await checkLicense(licenseKey, 'ignore')
+            if (response.status !== 200) {
+              localStorage.removeItem('license_key')
+
+              Swal.fire({
+                title: 'Error!',
+                text:
+                  `${response?.data.message}` ||
+                  'Something bad happened, try again later',
+                icon: 'error',
+                confirmButtonText: 'Ok'
+              })
+              if (response.status === 404) {
+                const elem = this.$refs.myPurchaseBtn
+                elem.click()
+              }
+              if (response.status === 400) {
+                // alert('BYE BYE TA TA')
+                this.footerCreditCustom = false
+                localStorage.removeItem('license_key')
+              }
+            } else if (response.status === 200) {
+              this.footerCreditCustom = true
+              return
+            }
+          } else {
+            this.footerCreditCustom = false
+
+            Swal.fire({
+              title: 'Error!',
+              html: 'Please login or buy an agency',
+              icon: 'error',
+              confirmButtonText: 'Ok',
+              timer: 1000
+            })
+            const elem = this.$refs.myPurchaseBtn
+            elem.click()
+          }
         }
       },
       deep: true
     },
-    seoOptimization: {
+
+    logoOrHeader: {
       async handler(newValue, oldValue) {
         if (newValue === true) {
+          this.images.logo.url = null
+          this.logoOrHeader = true
+        } else {
+          this.images.cover.url = null
+          this.logoOrHeader = false
+        }
+      }
+    },
+    deep: true
+  },
+
+  metaData: {
+    async handler(newValue, oldValue) {
+      if (newValue === true) {
+        let isPresent = localStorage.getItem('license_key')
+        if (isPresent !== null) {
+          let licenseKey = localStorage.getItem('license_key')
+          let response = await checkLicense(licenseKey, 'ignore')
+          if (response.status !== 200) {
+            localStorage.removeItem('license_key')
+
+            Swal.fire({
+              title: 'Error!',
+              text:
+                `${response?.data.message}` ||
+                'Something bad happened, try again later',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            })
+            if (response.status === 404) {
+              const elem = this.$refs.myPurchaseBtn
+              elem.click()
+            }
+            if (response.status === 400) {
+              // alert('BYE BYE TA TA')
+              this.metaData = false
+              localStorage.removeItem('license_key')
+            }
+          } else if (response.status === 200) {
+            this.metaData = true
+            return
+          }
+        } else {
           this.seoOptimization = false
+          // alert('Please login or buy an agency')
           Swal.fire({
             title: 'Error!',
-            text: `Use Your Thrive Cart Here`,
+            html: 'Please login or buy an agency',
             icon: 'error',
-            confirmButtonText: 'Ok'
+            confirmButtonText: 'Ok',
+            timer: 1000
           })
+          const elem = this.$refs.myPurchaseBtn
+          elem.click()
         }
-      },
-      deep: true
-    }
+      }
+    },
+    deep: true
+  },
+  seoOptimization: {
+    async handler(newValue, oldValue) {
+      // Zia new work
+      // console.log(newValue)
+      if (newValue === true) {
+        let isPresent = localStorage.getItem('license_key')
+        if (isPresent !== null) {
+          let licenseKey = localStorage.getItem('license_key')
+          let response = await checkLicense(licenseKey, 'ignore')
+          if (response.status !== 200) {
+            localStorage.removeItem('license_key')
+
+            Swal.fire({
+              title: 'Error!',
+              text:
+                `${response?.data.message}` ||
+                'Something bad happened, try again later',
+              icon: 'error',
+              confirmButtonText: 'Ok'
+            })
+            if (response.status === 404) {
+              const elem = this.$refs.myPurchaseBtn
+              elem.click()
+            }
+            if (response.status === 400) {
+              this.seoOptimization = false
+              localStorage.removeItem('license_key')
+            }
+          } else if (response.status === 200) {
+            this.seoOptimization = true
+            return
+          }
+        } else {
+          this.seoOptimization = false
+
+          Swal.fire({
+            title: 'Error!',
+            html: 'Please login or buy an agency',
+            icon: 'error',
+            confirmButtonText: 'Ok',
+            timer: 1000
+          })
+          const elem = this.$refs.myPurchaseBtn
+          elem.click()
+        }
+      }
+    },
+    deep: true
   },
   async mounted() {
     this.$msalInstance = new PublicClientApplication(this.msalConfig)
     const accounts = this.$msalInstance.getAllAccounts()
+
     if (accounts.length == 0) {
       return
     }
+
     this.account = accounts[0]
   },
   methods: {
     async onSuccess(googleUser) {
-      await googleUser.getBasicProfile()
+      let response = await googleUser.getBasicProfile()
 
       this.closeModal()
+      let first_name = response.getName().split(' ')[0]
+      let last_name = response.getName().split(' ')[1]
+      let email_address = response.getEmail()
 
-      this.allowDownload()
+      this.storeUserInfoToLocalStorage(
+        first_name,
+        last_name,
+        email_address,
+        'GOOGLE'
+      )
+      let response1 = await this.storeUserGoogleSheetFun(
+        first_name,
+        last_name,
+        email_address,
+        'GOOGLE',
+        'NONE',
+        'XXXXXXXXXXXXXXXXXX',
+        0
+      )
+
+      // console.log(response1)
+      if (response1.code === 200) {
+        let zip_folder_name =
+          `${this.getFullname}'s` + ' ' + 'Digital Business Card'
+        let response2 = await this.storeUserGoogleSheetFun(
+          first_name,
+          last_name,
+          email_address,
+          'GOOGLE',
+          zip_folder_name,
+          1
+        )
+
+        if (response2.code === 200) {
+          this.allowDownload()
+        }
+      } else {
+        alert('AN ERROR OCCURED')
+      }
     },
 
     async onFailure(err) {
@@ -1811,7 +2966,73 @@ export default {
       console.log(err)
     },
 
-    async fb() {},
+    //facebook response ok
+
+    async getUserData() {
+      this.FB.api(
+        '/me',
+        'GET',
+        { fields: 'id,name,email,picture' },
+        userInformation => {
+          let first_name = userInformation.name.split(' ')[0]
+          let last_name = userInformation.name.split(' ')[1]
+          let email_address = userInformation.email
+          this.first_name = first_name
+          this.last_name = last_name
+          this.email_address = email_address
+          this.closeModal()
+
+          this.storeUserInfoToLocalStorage(
+            first_name,
+            last_name,
+            email_address,
+            'FACEBOOK'
+          )
+
+          this.fb()
+
+          return
+        }
+      )
+    },
+
+    async fb() {
+      let response1 = await this.storeUserGoogleSheetFun(
+        this.first_name,
+        this.last_name,
+        this.email_address,
+        'FACEBOOK',
+        'NONE',
+        'XXXXXXXXXXXXXXXXXX',
+        0
+      )
+
+      // console.log(response1)
+      if (response1.code === 200) {
+        let zip_folder_name =
+          `${this.getFullname}'s` + ' ' + 'Digital Business Card'
+        let response2 = await this.storeUserGoogleSheetFun(
+          this.first_name,
+          this.last_name,
+          this.email_address,
+          'FACEBOOK',
+          zip_folder_name,
+          1
+        )
+
+        console.log(response2)
+        // this.allowDownload()
+        if (response2.code === 200) {
+          this.allowDownload()
+          this.first_name = ''
+          this.last_name = ''
+          this.email_address = ''
+        }
+      } else {
+        alert('AN ERROR OCCURED')
+      }
+    },
+
     //facebook
     sdkLoaded(payload) {
       this.isConnected = payload.isConnected
@@ -1820,6 +3041,7 @@ export default {
     //facebook
     onLogin() {
       this.isConnected = true
+      this.getUserData()
     },
     //facebook
     onLogout() {
@@ -1832,12 +3054,53 @@ export default {
     async SignInMicroSoft() {
       await this.$msalInstance
         .loginPopup({})
-        .then(() => {
+        .then(async () => {
           this.closeModal()
+          const myAccounts = this.$msalInstance.getAllAccounts()
+          console.log('console.log(myAccounts[0])')
+          console.log(myAccounts[0])
+          this.account = myAccounts[0]
 
-          this.allowDownload()
+          let first_name = myAccounts[0]?.name.split(' ')[0]
+          let last_name = myAccounts[0]?.name.split(' ')[1]
+          let email_address = myAccounts[0]?.username
+
+          this.storeUserInfoToLocalStorage(
+            first_name,
+            last_name,
+            email_address,
+            'MICROSOFT'
+          )
+          let response1 = await this.storeUserGoogleSheetFun(
+            first_name,
+            last_name,
+            email_address,
+            'MICROSOFT',
+            'NONE',
+            'XXXXXXXXXXXXXXXXXX',
+            0
+          )
+
+          // console.log(response1)
+          if (response1.code === 200) {
+            let zip_folder_name =
+              `${this.getFullname}'s` + ' ' + 'Digital Business Card'
+            let response2 = await this.storeUserGoogleSheetFun(
+              first_name,
+              last_name,
+              email_address,
+              'MICROSOFT',
+              zip_folder_name,
+              1
+            )
+
+            if (response2.code === 200) {
+              this.allowDownload()
+            }
+          } else {
+            alert('AN ERROR OCCURED')
+          }
         })
-
         .catch(error => {
           console.error(`error during authentication: ${error}`)
         })
@@ -1852,13 +3115,73 @@ export default {
         })
     },
 
+    async downloadByLocalStorageData() {
+      try {
+        let user = JSON.parse(localStorage.getItem('user'))
+        let first_name = user?.first_name
+        let last_name = user?.last_name
+        let email_address = user?.email_address
+        let login_source = user?.login_source
+        let zip_folder_name =
+          `${this.getFullname}'s` + ' ' + 'Digital Business Card'
+        let response2 = await this.storeUserGoogleSheetFun(
+          first_name,
+          last_name,
+          email_address,
+          login_source,
+          zip_folder_name,
+          1
+        )
+
+        if (response2.code === 200) {
+          this.allowDownload()
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async storeUserGoogleSheetFun(
+      first_name,
+      last_name,
+      email_address,
+      login_source,
+      zip_folder_name,
+      googleSpreadSheetIndex
+    ) {
+      let response = await saveToGoogleSheet(
+        first_name,
+        last_name,
+        email_address,
+        login_source,
+        zip_folder_name,
+        'XXXXXXXXXXXXXXXXXX',
+        googleSpreadSheetIndex
+      )
+      return response
+    },
+
+    storeUserInfoToLocalStorage(
+      first_name,
+      last_name,
+      email_address,
+      login_source
+    ) {
+      let user = {
+        first_name: first_name,
+        last_name: last_name,
+        email_address: email_address,
+        login_source: login_source
+      }
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+
     closeModal() {
       this.show = false
       document.querySelector('body').classList.remove('overflow-hidden')
     },
     openModal() {
-      this.show = true
-      document.querySelector('body').classList.add('overflow-hidden')
+      this.allowDownload()
+      return
     },
     togglePreview() {
       this.opening = true
@@ -1920,9 +3243,6 @@ export default {
       this.content = content
     },
     addAction(type, name) {
-      // this[type].push(this.actions[type][index])
-      // this.actions[type].splice(index, 1)
-
       let index = this.actions[type].findIndex(e => e.name === name)
       this[type].push(this.actions[type][index])
       this.actions[type].splice(index, 1)
@@ -1955,7 +3275,9 @@ export default {
         `${this.genInfo.name}'s public key.asc`
       )
     },
+
     async resizeImage(type, mime, index1, index2) {
+      console.log('type', type)
       let vm = this
       let reader = new FileReader()
       let file
@@ -1981,13 +3303,10 @@ export default {
             canvas.width = canvas.height = 320
           } else {
             if (type == 'logo') {
-              maxWidth = 1056
-              maxHeight = 288
-            } else if (type == 'icon') {
-              maxWidth = 16
-              maxHeight = 16
+              maxWidth = 960
+              maxHeight = 192
             } else {
-              maxWidth = maxHeight = 1296
+              maxWidth = maxHeight = 960
             }
             let width = img.width
             let height = img.height
@@ -2417,10 +3736,7 @@ img[data-v-0af1f3c3] {
   content: url('./../assets/icons/facebook_logo_social.png');
   width: 38px;
   top: 4px;
-  /* height: 90%; */
-  /* border-radius: 50%; */
-  /* border: 5px solid #f3f3f3; */
-  /* border-top: 5px solid #3498db; */
+
   -webkit-animation: none !important;
   animation: none !important;
   position: absolute;

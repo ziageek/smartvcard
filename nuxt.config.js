@@ -151,17 +151,18 @@ export default {
    ** See https://nuxtjs.org/api/configuration-build/
    */
   build: {
-  // Disable HMR messages
-  hotMiddleware: {
-    client: {
-      noInfo: true,
+    // Disable HMR messages
+    hotMiddleware: {
+      client: {
+        noInfo: true
+      }
     },
-  },
     terser: {
       // https://github.com/terser/terser#compress-options
       terserOptions: {
         compress: {
-          pure_funcs: ['console.info', 'console.debug', 'console.warn']
+          pure_funcs: ['console.info', 'console.debug', 'console.warn'],
+          drop_console: true
         }
       }
     },

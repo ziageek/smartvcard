@@ -1,6 +1,11 @@
 <template>
   <div
-    class="overflow-y-scroll max-hd border-t-0 border-4 border-black bg-gray-900"
+    class="
+      overflow-y-scroll
+      max-hd
+      border-t-0 border-4 border-black
+      bg-gray-900
+    "
   >
     <div id="Theme1">
       <html
@@ -16,9 +21,37 @@
           />
 
           <link
+            v-if="!genInfo.customFavi"
             rel="icon"
             type="image/png"
             href="https://getbizviz.s3.amazonaws.com/icon.png"
+          />
+
+
+
+          <link
+            v-if="genInfo.bookMarkImg"
+            rel="apple-touch-icon-precomposed"
+            sizes="128x128"
+            :href="`${genInfo.bookMarkImg}`"
+          />
+
+          <meta
+            v-if="genInfo.bookMarkTitle"
+            name="apple-mobile-web-app-title"
+            :content="`${genInfo.bookMarkTitle}`"
+          />
+
+          <meta
+            v-if="genInfo.shareImg"
+            property="og:image"
+            :content="`${genInfo.shareImg}`"
+        />
+
+          <link
+            v-if="genInfo.customFavi"
+            rel="icon"
+            :href="`${genInfo.customFavi}`"
           />
 
           <meta
@@ -46,11 +79,28 @@
           />
 
           <meta
+            v-if="!genInfo.metaName"
             name="author"
             content="SMART vCARD - Another Software Solution By BizViz"
           />
-          <meta name="url" content="https://smartvcard.com" />
-          <meta name="designer" content="Jeff Baer" />
+          <meta
+            v-if="!genInfo.metaURL"
+            name="url"
+            content="https://smartvcard.com"
+          />
+          <!-- we should remove it -->
+          <meta v-if="!genInfo.metaURL" name="designer" content="Jeff Baer" />
+
+          <meta
+            v-if="genInfo.metaName"
+            :name="`${genInfo.metaName}`"
+            :content="`${genInfo.metaContent}`"
+          />
+          <meta
+            v-if="genInfo.metaURL"
+            name="url"
+            :content="`${genInfo.metaURL}`"
+          />
           <meta
             v-if="!genInfo.seoTitle"
             property="og:title"
@@ -153,12 +203,6 @@
             </div>
           </div>
           <header>
-            <img
-              id="logo"
-              v-if="images.logo.url"
-              :src="PreviewMode ? images.logo.url : `./logo.${images.logo.ext}`"
-              alt="Logo"
-            />
             <div
               id="topActions"
               :style="{ display: PreviewMode ? 'flex' : 'none' }"
@@ -187,8 +231,40 @@
                 ></div>
               </a>
             </div>
+            <div class="headerImgC">
+              <img
+                id="cover"
+                v-if="images.cover.url"
+                :src="
+                  PreviewMode ? images.cover.url : `./cover.${images.cover.ext}`
+                "
+                alt="Background Pattern"
+              />
+              <img
+                id="logo"
+                v-if="images.logo.url"
+                :src="
+                  PreviewMode ? images.logo.url : `./logo.${images.logo.ext}`
+                "
+                :style="{
+                  margin: images.photo.url
+                    ? images.cover.url
+                      ? '3rem 0 6rem'
+                      : '3rem 0 8rem'
+                    : '3rem 0'
+                }"
+                alt="Logo"
+              />
+            </div>
           </header>
-          <main :style="{ backgroundColor: `${colors.mainBg.color}` }">
+
+          <main
+            :style="{
+              backgroundColor: `${colors.mainBg.color}`,
+
+              marginTop: `${hasOnlyProfilePic ? '5rem' : '0'}`
+            }"
+          >
             <div id="profile">
               <img
                 v-if="images.photo.url"
@@ -198,6 +274,9 @@
                 alt="Photo"
               />
               <div id="info">
+                <!-- <p class="name text">
+                  {{ this.genInfo.prefix }}
+                </p> -->
                 <p class="name text">
                   {{ getFullname }}
                 </p>
@@ -215,8 +294,18 @@
                 </p>
               </div>
             </div>
-            <p class="bizaddr text" v-if="genInfo.addr">
-              {{ genInfo.addr }}
+            <p class="bizaddr text">
+              {{
+                `${genInfo.street}${genInfo.street !== '' ? ',' : ''}` +
+                  ' ' +
+                  `${genInfo.city}${genInfo.city !== '' ? ',' : ''}` +
+                  ' ' +
+                  `${genInfo.state}` +
+                  ' ' +
+                  `${genInfo.postal}` +
+                  ' ' +
+                  `${genInfo.country}`
+              }}
             </p>
             <br />
             <p class="desc text" v-if="genInfo.desc">
@@ -247,7 +336,7 @@
               </div>
               <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
               <div
-                v-if="!simplifyCard"
+                v-if="!simplifyCard && !isFeaturedOn"
                 class="actionsC"
                 v-for="(item, index) in primaryActions"
                 :key="'pa' + index"
@@ -277,7 +366,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="!simplifyCard">
+            <div v-if="!simplifyCard && !isFeaturedOn">
               <div class="actions secondary">
                 <div
                   class="actionsC"
@@ -305,7 +394,7 @@
             </div>
 
             <div
-              v-if="!simplifyCard"
+              v-if="!simplifyCard || isFeaturedOn"
               class="attachments"
               v-for="(item, index) in featured"
               :key="'fc' + index"
@@ -357,6 +446,14 @@
                   :colors="colors"
                   :PreviewMode="PreviewMode"
                 />
+
+                <CustomButtonShowCase
+                  v-else-if="item.contentType == 'customButton' && item.label"
+                  :product="item"
+                  :colors="colors"
+                  :PreviewMode="PreviewMode"
+                />
+
                 <div
                   v-else-if="item.contentType == 'text' && item.value"
                   class="content text"
@@ -366,9 +463,26 @@
                     {{ item.value }}
                   </p>
                 </div>
-                <div v-else-if="stripAttr(item)" class="content embedded">
+
+                <div
+                  v-else-if="item.contentType == 'link' && item.value"
+                  class="content text"
+                >
+                  <!-- <p class="textC ziacard">
+                    {{ item.value }}
+                  </p> -->
+                  <div
+                    :style="{
+                      padding: '10px',
+                      backgroundColor: `${colors.cardBg.color}`
+                    }"
+                    v-html="item.value"
+                  ></div>
+                </div>
+
+                <div v-else-if="stripAttr(item.value)" class="content embedded">
                   <iframe
-                    :src="stripAttr(item)"
+                    :src="stripAttr(item.value)"
                     frameborder="0"
                     allowfullscreen
                   ></iframe>
@@ -404,6 +518,7 @@
 import MediaPlayer from './MediaPlayer'
 import DocumentDownloader from './DocumentDownloader'
 import ProductShowcase from './ProductShowcase'
+import CustomButtonShowCase from './CustomButtonShowCase.vue'
 export default {
   props: [
     'username',
@@ -419,6 +534,7 @@ export default {
     'footerCredit',
     'seoOpti',
     'simplifyCard',
+    'isFeaturedOn',
     'showAlert',
     'hasLightBG',
     'pubKeyIsValid'
@@ -426,7 +542,8 @@ export default {
   components: {
     MediaPlayer,
     DocumentDownloader,
-    ProductShowcase
+    ProductShowcase,
+    CustomButtonShowCase
   },
   watch: {
     getFeaturedMusic(oldv, newv) {
@@ -440,10 +557,16 @@ export default {
     }
   },
   computed: {
+    hasOnlyProfilePic() {
+      return !(this.images.cover.url || this.images.logo.url)
+    },
     getFullname() {
+      let pr = this.genInfo.prefix
       let fn = this.genInfo.fname
       let ln = this.genInfo.lname
-      return (fn + ln).length ? `${fn ? fn : ''}${ln ? ' ' + ln : ''}` : null
+      return (pr + fn + ln).length
+        ? `${pr ? pr + ' ' : ' '}${fn ? fn : ''}${ln ? ' ' + ln : ' '}`
+        : null
     },
     getFeaturedMusic() {
       return this.featured.music
@@ -634,16 +757,52 @@ export default {
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 6rem 3rem;
+    // padding: 2rem 3rem;
+    padding: 4rem 0rem;
     box-sizing: border-box;
+    padding-bottom: 0;
+  }
+
+  .headerImgC {
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto;
+    height: 100%;
+    overflow: hidden;
+  }
+  #cover {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+    height: 20rem;
+    object-position: top center;
+    object-fit: cover;
   }
   #logo {
     max-height: 6rem;
-    text-align: center;
-    color: gray;
     pointer-events: none;
     user-select: none;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
   }
+
+  // #logo {
+  //   max-height: 6rem;
+  //   text-align: center;
+  //   color: gray;
+  //   pointer-events: none;
+  //   user-select: none;
+  // }
+  //  #cover {
+  //   grid-column: 1;
+  //   grid-row: 1;
+  //   width: 100%;
+  //   height: 20rem;
+  //   object-position: top center;
+  //   object-fit: cover;
+  // }
   #topActions {
     flex-direction: row-reverse;
     justify-content: space-between;
@@ -673,6 +832,14 @@ export default {
     align-items: center;
     justify-content: center;
     img {
+      // width: 10rem;
+      // height: 10rem;
+      // border-radius: 100%;
+      // box-sizing: content-box;
+      // pointer-events: none;
+      // user-select: none;
+      // margin-top: -6rem;
+
       width: 10rem;
       height: 10rem;
       border-radius: 100%;
@@ -680,6 +847,7 @@ export default {
       pointer-events: none;
       user-select: none;
       margin-top: -6rem;
+      z-index: 1;
 
       // width: 7rem;
       // height: 7rem;
@@ -800,10 +968,14 @@ export default {
       width: 100%;
     }
   }
+  .paddingBottom {
+    padding-bottom: 10px;
+  }
   .embedded {
     position: relative;
     padding-top: 56.25%;
     iframe {
+      padding-bottom: 2%;
       position: absolute;
       top: 0;
       left: 0;
