@@ -45,14 +45,8 @@ You can,
 ## License
 
 ```
-SMART vCARD - Another Software Solution By BizViz
-Copyright (C) 2024 ZiaGeek
-
-
-We also give credit for this project to Vishnu Raghav (https://github.com/vishnuraghavb)
-
-Please note:-  Hosted Features are stand alone project. That was never derived or ispired by this project. We developed that our own to host different kind of stuff.
-
+SMART vCARD - An Open_source Digital Business Card Generator based on the EnBizCard project from Vishnu Raghav B (https://github.com/vishnuraghavb)
+Copyright (C) 2021 Vishnu Raghav B and 2024 ZiaGeek
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -66,6 +60,10 @@ GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+PLEASE NOTE: Any references to hosting are a stand alone project located at https://www.ziphost.app/ and are not part of this license.
+For details related to hosting, contact ziageek <https://github.com/ziageek/smartvcard/>
+
 ```
 
 ## Support me by buying me a coffee :)
