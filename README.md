@@ -41,6 +41,7 @@ You can,
 
 - [Create an issue here](https://github.com/ziageek/smartvcard/issues)
 - Contact me at ziageekbiz@gmail.com
+- I'm available and open to work
 
 ## License
 
